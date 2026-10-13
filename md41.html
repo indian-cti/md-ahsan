@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 38 - Expense Tracker</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      color: #1e293b;
+      background: #f1f5f9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #0f766e;
+      text-align: center;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      margin: 20px 0;
+      border-radius: 14px;
+      box-shadow: 0 5px 18px #0000000c;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    button {
+      padding: 11px 15px;
+      border: none;
+      border-radius: 8px;
+      background: #0f766e;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover { background: #115e59; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .summary-item {
+      background: #ccfbf1;
+      padding: 18px;
+      border-radius: 12px;
+    }
+
+    .summary-item p {
+      margin: 0 0 10px;
+      color: #115e59;
+    }
+
+    .summary-item strong {
+      font-size: 25px;
+      overflow-wrap: anywhere;
+    }
+
+    .expense {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .expense-info { overflow-wrap: anywhere; }
+    .expense-info p { margin: 5px 0; color: #64748b; }
+
+    .amount {
+      font-weight: bold;
+      color: #0f766e;
+    }
+
+    .delete-btn { background: #dc2626; }
+    .delete-btn:hover { background: #b91c1c; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .toolbar select { flex: 1; }
+
+    #message {
+      min-height: 20px;
+      color: #0f766e;
+    }
+
+    @media (max-width: 550px) {
+      body { padding: 12px; }
+      .form-grid, .summary { grid-template-columns: 1fr; }
+      .expense { align-items: flex-start; }
+      .toolbar { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>💰 Expense Tracker</h1>
+    <p style="text-align:center">Day 38 — JavaScript + Local Storage</p>
+
+    <section class="summary">
+      <div class="summary-item">
+        <p>Total Expenses</p>
+        <strong id="total">₹0.00</strong>
+      </div>
+
+      <div class="summary-item">
+        <p>Total Transactions</p>
+        <strong id="count">0</strong>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Add Expense</h2>
+
+      <form id="expenseForm">
+        <div class="form-grid">
+          <input
+            id="title"
+            placeholder="Expense name"
+            maxlength="80"
+            required
+          >
+
+          <input
+            id="amount"
+            type="number"
+            placeholder="Amount (₹)"
+            min="0.01"
+            max="100000000"
+            step="0.01"
+            required
+          >
+
+          <select id="category" required>
+            <option value="Food">🍔 Food</option>
+            <option value="Travel">🚌 Travel</option>
+            <option value="Shopping">🛍️ Shopping</option>
+            <option value="Bills">💡 Bills</option>
+            <option value="Other">📦 Other</option>
+          </select>
+
+          <input id="date" type="date" required>
+        </div>
+
+        <button type="submit" style="margin-top:14px">
+          + Add Expense
+        </button>
+
+        <p id="message" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Expense History</h2>
+
+      <div class="toolbar">
+        <select id="filter" aria-label="Filter expenses">
+          <option value="All">All Categories</option>
+          <option value="Food">Food</option>
+          <option value="Travel">Travel</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Bills">Bills</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <button type="button" id="clearAll" class="delete-btn">
+          Clear All
+        </button>
+      </div>
+
+      <div id="expenses"></div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "day38_expense_tracker";
+
+    const form = document.getElementById("expenseForm");
+    const expensesContainer = document.getElementById("expenses");
+    const message = document.getElementById("message");
+    const filter = document.getElementById("filter");
+
+    let expenses = loadExpenses();
+
+    // Browser storage se data load karo
+    function loadExpenses() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (!saved) return [];
+
+        const parsed = JSON.parse(saved);
+
+        if (!Array.isArray(parsed)) return [];
+
+        return parsed.filter(item =>
+          item &&
+          typeof item.id === "string" &&
+          typeof item.title === "string" &&
+          typeof item.amount === "number" &&
+          Number.isFinite(item.amount) &&
+          item.amount > 0 &&
+          typeof item.category === "string" &&
+          typeof item.date === "string"
+        );
+      } catch (error) {
+        console.error("Could not load saved expenses:", error);
+        return [];
+      }
+    }
+
+    // Data ko browser mein save karo
+    function saveExpenses() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+        return true;
+      } catch (error) {
+        console.error("Could not save expenses:", error);
+        message.textContent =
+          "Data save nahi ho saka. Browser storage check karo.";
+        return false;
+      }
+    }
+
+    function formatMoney(amount) {
+      return amount.toLocaleString("en-IN", {
+        style: "currency",
+        currency: "INR"
+      });
+    }
+
+    function renderExpenses() {
+      expensesContainer.replaceChildren();
+
+      const selectedCategory = filter.value;
+
+      const visibleExpenses = expenses
+        .filter(item =>
+          selectedCategory === "All" ||
+          item.category === selectedCategory
+        )
+        .slice()
+        .sort((a, b) => b.date.localeCompare(a.date));
+
+      const total = expenses.reduce(
+        (sum, item) => sum + item.amount, 0
+      );
+
+      document.getElementById("total").textContent =
+        formatMoney(total);
+
+      document.getElementById("count").textContent =
+        expenses.length;
+
+      if (visibleExpenses.length === 0) {
+        expensesContainer.textContent = "No expenses to show.";
+        return;
+      }
+
+      visibleExpenses.forEach(item => {
+        const row = document.createElement("article");
+        row.className = "expense";
+
+        const info = document.createElement("div");
+        info.className = "expense-info";
+
+        const title = document.createElement("strong");
+        title.textContent = item.title;
+
+        const detail = document.createElement("p");
+        detail.textContent = `${item.category} • ${item.date}`;
+
+        const amount = document.createElement("div");
+        amount.className = "amount";
+        amount.textContent = formatMoney(item.amount);
+
+        const remove = document.createElement("button");
+        remove.className = "delete-btn";
+        remove.textContent = "Delete";
+        remove.setAttribute(
+          "aria-label", "Delete " + item.title
+        );
+
+        remove.addEventListener("click", () => {
+          deleteExpense(item.id);
+        });
+
+        info.append(title, detail);
+        row.append(info, amount, remove);
+        expensesContainer.appendChild(row);
+      });
+    }
+
+    function addExpense(event) {
+      event.preventDefault();
+
+      const title = document.getElementById("title").value.trim();
+      const amount = Number(document.getElementById("amount").value);
+      const category = document.getElementById("category").value;
+      const date = document.getElementById("date").value;
+
+      if (!title || !date || !Number.isFinite(amount) ||
+          amount <= 0 || amount > 100000000) {
+        message.textContent = "Please enter valid expense details.";
+        return;
+      }
+
+      const expense = {
+        id: crypto.randomUUID
+          ? crypto.randomUUID()
+          : Date.now().toString() + Math.random().toString(16).slice(2),
+        title,
+        amount,
+        category,
+        date
+      };
+
+      expenses.push(expense);
+      saveExpenses();
+
+      form.reset();
+      document.getElementById("date").value =
+        new Date().toLocaleDateString("en-CA");
+
+      message.textContent = "Expense added!";
+      renderExpenses();
+    }
+
+    function deleteExpense(id) {
+      expenses = expenses.filter(item => item.id !== id);
+      saveExpenses();
+      message.textContent = "Expense deleted.";
+      renderExpenses();
+    }
+
+    document.getElementById("clearAll").addEventListener("click", () => {
+      if (expenses.length === 0) {
+        message.textContent = "There are no expenses to clear.";
+        return;
+      }
+
+      if (confirm("Delete all saved expenses?")) {
+        expenses = [];
+        saveExpenses();
+        message.textContent = "All expenses cleared.";
+        renderExpenses();
+      }
+    });
+
+    form.addEventListener("submit", addExpense);
+    filter.addEventListener("change", renderExpenses);
+
+    document.getElementById("date").value =
+      new Date().toLocaleDateString("en-CA");
+
+    renderExpenses();
+  </script>
+</body>
+</html>

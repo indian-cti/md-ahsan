@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Interactive Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 25px 15px;
+            font-family: Arial, sans-serif;
+            background: #101827;
+            color: white;
+            transition: background 0.4s;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 28px;
+            text-align: center;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px #0004;
+        }
+
+        h1 {
+            color: #5eead4;
+        }
+
+        #clock {
+            font-size: 30px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 16px;
+            margin: 6px;
+            border: none;
+            border-radius: 8px;
+            background: #2dd4bf;
+            color: #102a2a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .color-buttons {
+            margin-top: 20px;
+        }
+
+        #message {
+            min-height: 24px;
+            color: #facc15;
+        }
+
+        .hint {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="dashboard">
+
+        <h1 id="heading">My Personal Dashboard 🚀</h1>
+
+        <h2 id="welcome">Welcome, Student!</h2>
+
+        <p class="hint">
+            JavaScript DOM Manipulation Practice
+        </p>
+
+        <div id="clock">00:00:00</div>
+
+        <input
+            type="text"
+            id="nameInput"
+            placeholder="Enter your name"
+            maxlength="40"
+        >
+
+        <button onclick="changeName()">
+            Change Name
+        </button>
+
+        <button onclick="showMessage()">
+            Show Message
+        </button>
+
+        <p id="message"></p>
+
+        <hr>
+
+        <h3>Change Background Color</h3>
+
+        <div class="color-buttons">
+            <button onclick="changeBackground('#101827')">
+                Dark Blue
+            </button>
+
+            <button onclick="changeBackground('#14532d')">
+                Green
+            </button>
+
+            <button onclick="changeBackground('#581c87')">
+                Purple
+            </button>
+
+            <button onclick="changeBackground('#7c2d12')">
+                Brown
+            </button>
+        </div>
+
+        <button onclick="resetDashboard()">
+            Reset Dashboard
+        </button>
+
+    </main>
+
+    <script>
+        // Change the welcome name.
+        function changeName() {
+            const name = document
+                .getElementById("nameInput")
+                .value.trim();
+
+            if (name === "") {
+                document.getElementById("message").textContent =
+                    "Please enter your name first!";
+                return;
+            }
+
+            document.getElementById("welcome").textContent =
+                "Welcome, " + name + "! 🎉";
+
+            document.getElementById("message").textContent =
+                "Name updated successfully!";
+        }
+
+        // Show a message.
+        function showMessage() {
+            document.getElementById("message").textContent =
+                "Keep learning! You are becoming a Web Developer. 💻";
+        }
+
+        // Change the page background.
+        function changeBackground(color) {
+            document.body.style.backgroundColor = color;
+        }
+
+        // Update the digital clock.
+        function updateClock() {
+            const now = new Date();
+
+            document.getElementById("clock").textContent =
+                now.toLocaleTimeString();
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Reset dashboard settings.
+        function resetDashboard() {
+            document.getElementById("welcome").textContent =
+                "Welcome, Student!";
+
+            document.getElementById("nameInput").value = "";
+
+            document.getElementById("message").textContent = "";
+
+            document.body.style.backgroundColor = "#101827";
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student List Manager</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #101827, #263c5a);
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            padding: 25px;
+            background: #1e293b;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px #0005;
+        }
+
+        h1 {
+            text-align: center;
+            color: #38e8b0;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin: 8px 0;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            width: 100%;
+            background: #10b981;
+            color: #06281e;
+            margin: 8px 0;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .search-box {
+            margin-top: 15px;
+        }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            margin-top: 10px;
+            background: #334155;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .student-name {
+            flex: 1;
+        }
+
+        #message {
+            min-height: 22px;
+            color: #38e8b0;
+        }
+
+        .total {
+            text-align: center;
+            color: #facc15;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 16px;
+            }
+
+            .student-item {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎓 Student Manager</h1>
+
+        <p class="subtitle">
+            Add, search and manage students
+        </p>
+
+        <form id="studentForm">
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Enter student name"
+                maxlength="50"
+                required
+            >
+
+            <button type="submit" class="add-btn">
+                + Add Student
+            </button>
+        </form>
+
+        <input
+            type="text"
+            id="searchInput"
+            class="search-box"
+            placeholder="🔍 Search student..."
+        >
+
+        <p class="total" id="totalStudents">
+            Total Students: 0
+        </p>
+
+        <p id="message" role="status"></p>
+
+        <div id="studentList"></div>
+
+    </div>
+
+    <script>
+        // Student names are stored in an array.
+        let students = [
+            "Aman",
+            "Rahul",
+            "Priya",
+            "Ali",
+            "Neha"
+        ];
+
+        const studentForm = document.getElementById("studentForm");
+        const studentName = document.getElementById("studentName");
+        const searchInput = document.getElementById("searchInput");
+        const studentList = document.getElementById("studentList");
+        const totalStudents = document.getElementById("totalStudents");
+        const message = document.getElementById("message");
+
+        // Display students on the page.
+        function showStudents() {
+            const searchText = searchInput.value.trim().toLowerCase();
+
+            studentList.replaceChildren();
+
+            const filteredStudents = students
+                .map((name, index) => ({ name, index }))
+                .filter(student =>
+                    student.name.toLowerCase().includes(searchText)
+                );
+
+            totalStudents.textContent =
+                "Total Students: " + students.length;
+
+            if (filteredStudents.length === 0) {
+                const emptyMessage = document.createElement("p");
+                emptyMessage.textContent = "No students found.";
+                studentList.appendChild(emptyMessage);
+                return;
+            }
+
+            filteredStudents.forEach(student => {
+                const item = document.createElement("div");
+                item.className = "student-item";
+
+                const name = document.createElement("span");
+                name.className = "student-name";
+                name.textContent = student.name;
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-btn";
+                deleteButton.textContent = "Delete";
+
+                deleteButton.addEventListener("click", function () {
+                    students.splice(student.index, 1);
+
+                    message.textContent =
+                        student.name + " deleted successfully.";
+
+                    showStudents();
+                });
+
+                item.appendChild(name);
+                item.appendChild(deleteButton);
+
+                studentList.appendChild(item);
+            });
+        }
+
+        // Add a new student.
+        studentForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const name = studentName.value.trim();
+
+            if (name === "") {
+                message.textContent = "Please enter a student name.";
+                return;
+            }
+
+            students.push(name);
+
+            message.textContent = name + " added successfully!";
+
+            studentName.value = "";
+
+            showStudents();
+            studentName.focus();
+        });
+
+        // Search students as the user types.
+        searchInput.addEventListener("input", function () {
+            showStudents();
+        });
+
+        // Show the initial list.
+        showStudents();
+    </script>
+</body>
+</html>

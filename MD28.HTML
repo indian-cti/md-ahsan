@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Notes App</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 30px 15px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #101827, #243b55);
+            color: white;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            padding: 25px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px #0005;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5eead4;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 13px;
+            margin: 8px 0;
+            border: 1px solid #64748b;
+            border-radius: 8px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 11px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .save-btn {
+            width: 100%;
+            background: #2dd4bf;
+            color: #102a2a;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .note {
+            margin-top: 15px;
+            padding: 16px;
+            background: #334155;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .note h3 {
+            margin-top: 0;
+            color: #5eead4;
+        }
+
+        .note p {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .note-date {
+            color: #cbd5e1;
+            font-size: 12px;
+        }
+
+        #message {
+            min-height: 22px;
+            color: #facc15;
+        }
+
+        .notes-heading {
+            margin-top: 28px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>📝 My Notes App</h1>
+
+        <p class="subtitle">
+            Create and save your notes in this browser.
+        </p>
+
+        <form id="noteForm">
+
+            <input
+                type="text"
+                id="noteTitle"
+                placeholder="Enter note title"
+                maxlength="100"
+                required
+            >
+
+            <textarea
+                id="noteContent"
+                placeholder="Write your note here..."
+                maxlength="5000"
+                required
+            ></textarea>
+
+            <button type="submit" class="save-btn">
+                Save Note
+            </button>
+
+        </form>
+
+        <p id="message" role="status" aria-live="polite"></p>
+
+        <h2 class="notes-heading">Your Saved Notes</h2>
+
+        <div id="notesList"></div>
+
+    </main>
+
+    <script>
+        const noteForm = document.getElementById("noteForm");
+        const noteTitle = document.getElementById("noteTitle");
+        const noteContent = document.getElementById("noteContent");
+        const notesList = document.getElementById("notesList");
+        const message = document.getElementById("message");
+
+        // Load saved notes from browser storage.
+        function loadNotes() {
+            try {
+                const savedData = localStorage.getItem("myNotes");
+
+                if (savedData === null) {
+                    return [];
+                }
+
+                const parsedData = JSON.parse(savedData);
+
+                if (!Array.isArray(parsedData)) {
+                    return [];
+                }
+
+                return parsedData.filter(function(note) {
+                    return note &&
+                        typeof note.id === "string" &&
+                        typeof note.title === "string" &&
+                        typeof note.content === "string" &&
+                        typeof note.date === "string";
+                });
+            } catch (error) {
+                return [];
+            }
+        }
+
+        let notes = loadNotes();
+
+        // Save notes to browser storage.
+        function saveNotes() {
+            try {
+                localStorage.setItem("myNotes", JSON.stringify(notes));
+                return true;
+            } catch (error) {
+                message.textContent =
+                    "Could not save notes. Browser storage may be unavailable.";
+                return false;
+            }
+        }
+
+        // Display notes on the page.
+        function displayNotes() {
+            notesList.replaceChildren();
+
+            if (notes.length === 0) {
+                const emptyMessage = document.createElement("p");
+                emptyMessage.textContent = "No notes yet. Create your first note!";
+                notesList.appendChild(emptyMessage);
+                return;
+            }
+
+            notes.forEach(function(note) {
+                const card = document.createElement("article");
+                card.className = "note";
+
+                const title = document.createElement("h3");
+                title.textContent = note.title;
+
+                const content = document.createElement("p");
+                content.textContent = note.content;
+
+                const date = document.createElement("p");
+                date.className = "note-date";
+                date.textContent = "Created: " + note.date;
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-btn";
+                deleteButton.textContent = "Delete Note";
+
+                deleteButton.addEventListener("click", function() {
+                    const previousNotes = notes;
+
+                    notes = notes.filter(function(item) {
+                        return item.id !== note.id;
+                    });
+
+                    if (saveNotes()) {
+                        message.textContent = "Note deleted successfully!";
+                        displayNotes();
+                    } else {
+                        notes = previousNotes;
+                    }
+                });
+
+                card.appendChild(title);
+                card.appendChild(content);
+                card.appendChild(date);
+                card.appendChild(deleteButton);
+
+                notesList.appendChild(card);
+            });
+        }
+
+        // Add and save a new note.
+        noteForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const title = noteTitle.value.trim();
+            const content = noteContent.value.trim();
+
+            if (title === "" || content === "") {
+                message.textContent =
+                    "Please enter both title and note content.";
+                return;
+            }
+
+            const newNote = {
+                id: Date.now().toString() + Math.random().toString(16).slice(2),
+                title: title,
+                content: content,
+                date: new Date().toLocaleString()
+            };
+
+            notes.unshift(newNote);
+
+            if (saveNotes()) {
+                message.textContent = "Note saved successfully! 🎉";
+                noteForm.reset();
+                displayNotes();
+            } else {
+                notes = notes.filter(function(note) {
+                    return note.id !== newNote.id;
+                });
+                displayNotes();
+            }
+        });
+
+        // Show notes saved from previous visits.
+        displayNotes();
+    </script>
+
+</body>
+</html>

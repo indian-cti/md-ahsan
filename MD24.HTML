@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #101827, #243b55);
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+            padding: 25px;
+            background: #1e293b;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px #0005;
+        }
+
+        h1 {
+            color: #5eead4;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin: 7px 0;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            width: 100%;
+            margin-top: 8px;
+            background: #2dd4bf;
+            color: #102a2a;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .student-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 12px;
+            padding: 15px;
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        .student-info {
+            overflow-wrap: anywhere;
+        }
+
+        .student-info p {
+            margin: 6px 0 0;
+            color: #cbd5e1;
+        }
+
+        .total {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #facc15;
+        }
+
+        #message {
+            min-height: 22px;
+            color: #5eead4;
+        }
+
+        @media (max-width: 450px) {
+            .container {
+                padding: 16px;
+            }
+
+            .student-card {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>🎓 Student Management</h1>
+        <p class="subtitle">Manage your student records</p>
+
+        <form id="studentForm">
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Student name"
+                maxlength="50"
+                required
+            >
+
+            <input
+                type="number"
+                id="age"
+                placeholder="Student age"
+                min="5"
+                max="100"
+                required
+            >
+
+            <input
+                type="number"
+                id="marks"
+                placeholder="Marks (0 to 100)"
+                min="0"
+                max="100"
+                required
+            >
+
+            <button class="add-btn" type="submit">
+                + Add Student
+            </button>
+
+        </form>
+
+        <input
+            type="search"
+            id="search"
+            placeholder="🔍 Search by student name"
+        >
+
+        <p class="total" id="total">Total Students: 0</p>
+        <p id="message" role="status"></p>
+
+        <section id="studentList"></section>
+
+    </main>
+
+    <script>
+        // Array containing student objects.
+        let students = [
+            { id: 1, name: "Aman", age: 18, marks: 85 },
+            { id: 2, name: "Priya", age: 19, marks: 92 },
+            { id: 3, name: "Rahul", age: 18, marks: 67 }
+        ];
+
+        let nextId = 4;
+
+        const form = document.getElementById("studentForm");
+        const nameInput = document.getElementById("name");
+        const ageInput = document.getElementById("age");
+        const marksInput = document.getElementById("marks");
+        const searchInput = document.getElementById("search");
+        const studentList = document.getElementById("studentList");
+        const total = document.getElementById("total");
+        const message = document.getElementById("message");
+
+        // Decide grade based on marks.
+        function getGrade(marks) {
+            if (marks >= 90) {
+                return "A+";
+            } else if (marks >= 80) {
+                return "A";
+            } else if (marks >= 70) {
+                return "B";
+            } else if (marks >= 60) {
+                return "C";
+            } else if (marks >= 40) {
+                return "D";
+            } else {
+                return "Fail";
+            }
+        }
+
+        // Display student records.
+        function displayStudents() {
+            studentList.replaceChildren();
+
+            const query = searchInput.value.trim().toLowerCase();
+
+            const filteredStudents = students.filter(function(student) {
+                return student.name.toLowerCase().includes(query);
+            });
+
+            total.textContent = "Total Students: " + students.length;
+
+            if (filteredStudents.length === 0) {
+                const emptyMessage = document.createElement("p");
+                emptyMessage.textContent = "No students found.";
+                studentList.appendChild(emptyMessage);
+                return;
+            }
+
+            filteredStudents.forEach(function(student) {
+                const card = document.createElement("div");
+                card.className = "student-card";
+
+                const info = document.createElement("div");
+                info.className = "student-info";
+
+                const heading = document.createElement("strong");
+                heading.textContent = student.name;
+
+                const details = document.createElement("p");
+                details.textContent =
+                    "Age: " + student.age +
+                    " | Marks: " + student.marks + "/100" +
+                    " | Grade: " + getGrade(student.marks);
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-btn";
+                deleteButton.textContent = "Delete";
+
+                deleteButton.addEventListener("click", function() {
+                    students = students.filter(function(item) {
+                        return item.id !== student.id;
+                    });
+
+                    message.textContent =
+                        student.name + " removed successfully.";
+
+                    displayStudents();
+                });
+
+                info.appendChild(heading);
+                info.appendChild(details);
+
+                card.appendChild(info);
+                card.appendChild(deleteButton);
+
+                studentList.appendChild(card);
+            });
+        }
+
+        // Add a new student.
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const name = nameInput.value.trim();
+            const age = Number(ageInput.value);
+            const marks = Number(marksInput.value);
+
+            if (
+                name === "" ||
+                ageInput.value === "" ||
+                marksInput.value === "" ||
+                !Number.isFinite(age) ||
+                !Number.isFinite(marks) ||
+                age < 5 ||
+                age > 100 ||
+                marks < 0 ||
+                marks > 100
+            ) {
+                message.textContent =
+                    "Please enter valid student details.";
+                return;
+            }
+
+            const newStudent = {
+                id: nextId++,
+                name: name,
+                age: age,
+                marks: marks
+            };
+
+            students.push(newStudent);
+
+            message.textContent =
+                name + " added successfully!";
+
+            form.reset();
+            displayStudents();
+        });
+
+        // Search as the user types.
+        searchInput.addEventListener("input", function() {
+            displayStudents();
+        });
+
+        // Show initial records.
+        displayStudents();
+    </script>
+
+</body>
+</html>

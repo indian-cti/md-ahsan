@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 34 - Bug Finder</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 25px;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #38bdf8;
+      text-align: center;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 22px;
+      margin: 20px 0;
+      border-radius: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      background: #0f172a;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px 16px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #0284c7;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0369a1;
+    }
+
+    #output {
+      padding: 15px;
+      min-height: 55px;
+      margin-top: 15px;
+      background: #020617;
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .hint {
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    code {
+      color: #7dd3fc;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🐞 JavaScript Bug Finder</h1>
+    <p style="text-align:center">Day 34 — Error Handling</p>
+
+    <div class="card">
+      <h2>Calculator Test</h2>
+
+      <input id="first" type="number" placeholder="First number">
+      <input id="second" type="number" placeholder="Second number">
+
+      <select id="operation">
+        <option value="add">Addition (+)</option>
+        <option value="subtract">Subtraction (-)</option>
+        <option value="multiply">Multiplication (×)</option>
+        <option value="divide">Division (÷)</option>
+      </select>
+
+      <button onclick="calculate()">Run Test</button>
+
+      <div id="output" aria-live="polite">
+        Result yahan dikhega.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Error Handling Example</h2>
+      <p class="hint">
+        Is button ko click karke try, catch aur finally ka example dekho.
+      </p>
+
+      <button onclick="testError()">Test Error</button>
+      <div id="errorOutput" aria-live="polite">
+        Error test yahan dikhega.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Debugging Tips</h2>
+      <p class="hint">
+        1. VS Code mein code carefully check karo.<br>
+        2. Browser mein F12 dabao.<br>
+        3. Console tab kholo.<br>
+        4. Error message aur line number dekho.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const firstInput = document.getElementById("first").value;
+      const secondInput = document.getElementById("second").value;
+      const operation = document.getElementById("operation").value;
+      const output = document.getElementById("output");
+
+      try {
+        if (firstInput.trim() === "" || secondInput.trim() === "") {
+          throw new Error("Dono numbers enter karo.");
+        }
+
+        const a = Number(firstInput);
+        const b = Number(secondInput);
+
+        if (!Number.isFinite(a) || !Number.isFinite(b)) {
+          throw new Error("Valid numbers enter karo.");
+        }
+
+        let result;
+
+        if (operation === "add") {
+          result = a + b;
+        } else if (operation === "subtract") {
+          result = a - b;
+        } else if (operation === "multiply") {
+          result = a * b;
+        } else if (operation === "divide") {
+          if (b === 0) {
+            throw new Error("Zero se divide nahi kar sakte.");
+          }
+
+          result = a / b;
+        }
+
+        output.textContent = "Success! Result: " + result;
+        console.log("Calculation successful:", result);
+
+      } catch (error) {
+        output.textContent = "Error: " + error.message;
+        console.error("Calculation error:", error.message);
+
+      } finally {
+        console.log("Calculator test finished.");
+      }
+    }
+
+    function testError() {
+      const errorOutput = document.getElementById("errorOutput");
+
+      try {
+        const age = -5;
+
+        if (age < 0) {
+          throw new Error("Age negative nahi ho sakti.");
+        }
+
+        errorOutput.textContent = "Test successful!";
+
+      } catch (error) {
+        errorOutput.textContent = "Caught: " + error.message;
+        console.error("Test error:", error.message);
+
+      } finally {
+        console.log("Error test finished.");
+      }
+    }
+  </script>
+</body>
+</html>

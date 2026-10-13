@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Day 30 - Shopping Cart</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      padding: 28px 16px;
+      color: white;
+      text-align: center;
+      background: linear-gradient(135deg, #4338ca, #7c3aed);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(26px, 5vw, 38px);
+    }
+
+    header p {
+      margin: 0;
+      color: #e0e7ff;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 24px 16px;
+    }
+
+    .section-title {
+      margin: 28px 0 16px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    input, select {
+      background: white;
+    }
+
+    .toolbar input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    button {
+      border: none;
+      background: #4f46e5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.88;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+    }
+
+    .product-card {
+      overflow: hidden;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px #0000000b;
+    }
+
+    .product-image {
+      display: block;
+      width: 100%;
+      height: 180px;
+      padding: 14px;
+      object-fit: contain;
+      background: white;
+    }
+
+    .product-info {
+      padding: 16px;
+    }
+
+    .product-info h3 {
+      min-height: 42px;
+      font-size: 16px;
+      margin: 8px 0;
+    }
+
+    .category {
+      color: #7c3aed;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .price {
+      margin: 12px 0;
+      color: #15803d;
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .add-btn {
+      width: 100%;
+    }
+
+    .cart-box {
+      margin-top: 35px;
+      padding: 22px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 18px #0000000b;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 65px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .cart-image {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+    }
+
+    .cart-name {
+      margin: 0 0 7px;
+      font-size: 15px;
+    }
+
+    .cart-price {
+      color: #15803d;
+      font-weight: bold;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .quantity-controls button {
+      min-width: 34px;
+      padding: 7px 10px;
+    }
+
+    .remove-btn {
+      background: #dc2626;
+    }
+
+    .cart-summary {
+      max-width: 420px;
+      margin: 20px 0 0 auto;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin: 12px 0;
+    }
+
+    .total-row {
+      padding-top: 15px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
+      background: #15803d;
+    }
+
+    .status {
+      margin: 18px 0;
+      color: #64748b;
+      text-align: center;
+    }
+
+    .empty {
+      padding: 25px 10px;
+      color: #64748b;
+      text-align: center;
+    }
+
+    @media (max-width: 560px) {
+      .toolbar {
+        flex-direction: column;
+      }
+
+      .cart-box {
+        padding: 14px;
+      }
+
+      .cart-item {
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .cart-image {
+        width: 48px;
+        height: 55px;
+      }
+
+      .cart-item > .remove-btn {
+        grid-column: 2;
+        justify-self: start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>🛒 My Shopping Store</h1>
+    <p>Day 30 — Professional Shopping Cart</p>
+  </header>
+
+  <main class="container">
+
+    <h2 class="section-title">🛍️ Our Products</h2>
+
+    <div class="toolbar">
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="Search products..."
+        aria-label="Search products"
+      >
+
+      <button id="reloadButton" type="button">
+        Reload Products
+      </button>
+    </div>
+
+    <p id="productStatus" class="status" role="status" aria-live="polite">
+      Products load ho rahe hain...
+    </p>
+
+    <section
+      id="productGrid"
+      class="product-grid"
+      aria-label="Available products"
+    ></section>
+
+    <section class="cart-box">
+      <h2>🛒 Your Cart (<span id="cartCount">0</span> items)</h2>
+
+      <p id="cartMessage" class="empty">
+        Aapka cart abhi empty hai.
+      </p>
+
+      <div id="cartItems"></div>
+
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <strong id="subtotal">$0.00</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Shipping</span>
+          <strong id="shipping">$0.00</strong>
+        </div>
+
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <strong id="grandTotal">$0.00</strong>
+        </div>
+
+        <button id="checkoutButton" class="checkout-btn" type="button">
+          Place Demo Order
+        </button>
+
+        <p class="status">
+          Demo project: koi real payment ya order place nahi hoga.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const API_URL = "https://dummyjson.com/products?limit=30";
+    const CART_KEY = "day30ShoppingCart";
+
+    const productGrid = document.getElementById("productGrid");
+    const productStatus = document.getElementById("productStatus");
+    const searchInput = document.getElementById("searchInput");
+    const reloadButton = document.getElementById("reloadButton");
+
+    const cartItems = document.getElementById("cartItems");
+    const cartMessage = document.getElementById("cartMessage");
+    const cartCount = document.getElementById("cartCount");
+
+    const subtotalElement = document.getElementById("subtotal");
+    const shippingElement = document.getElementById("shipping");
+    const grandTotalElement = document.getElementById("grandTotal");
+    const checkoutButton = document.getElementById("checkoutButton");
+
+    let products = [];
+    let cart = loadCart();
+
+    // Price ko currency format mein dikhana
+    function formatPrice(price) {
+      return "$" + price.toFixed(2);
+    }
+
+    // Local Storage se cart load karna
+    function loadCart() {
+      try {
+        const savedCart = localStorage.getItem(CART_KEY);
+
+        if (!savedCart) {
+          return {};
+        }
+
+        const parsedCart = JSON.parse(savedCart);
+
+        if (
+          parsedCart === null ||
+          typeof parsedCart !== "object" ||
+          Array.isArray(parsedCart)
+        ) {
+          return {};
+        }
+
+        const cleanCart = {};
+
+        for (const [id, quantity] of Object.entries(parsedCart)) {
+          const productId = Number(id);
+
+          if (
+            Number.isInteger(productId) &&
+            productId > 0 &&
+            Number.isInteger(quantity) &&
+            quantity > 0 &&
+            quantity <= 99
+          ) {
+            cleanCart[productId] = quantity;
+          }
+        }
+
+        return cleanCart;
+
+      } catch (error) {
+        console.error("Cart load error:", error);
+        return {};
+      }
+    }
+
+    // Cart save karna
+    function saveCart() {
+      try {
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        return true;
+
+      } catch (error) {
+        console.error("Cart save error:", error);
+        alert("Cart save nahi hua. Browser storage check karein.");
+        return false;
+      }
+    }
+
+    // API se products load karna
+    async function loadProducts() {
+      reloadButton.disabled = true;
+      productStatus.textContent = "Loading products...";
+      productGrid.replaceChildren();
+
+      try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+          throw new Error("API request failed");
+        }
+
+        const data = await response.json();
+
+        products = Array.isArray(data.products)
+          ? data.products
+          : [];
+
+        // Cart mein sirf loaded products ke IDs rakho
+        const validIds = new Set(products.map(product => product.id));
+
+        for (const id of Object.keys(cart)) {
+          if (!validIds.has(Number(id))) {
+            delete cart[id];
+          }
+        }
+
+        saveCart();
+        displayProducts(products);
+        renderCart();
+
+        productStatus.textContent =
+          products.length > 0
+            ? "Products successfully load ho gaye!"
+            : "Koi product nahi mila.";
+
+      } catch (error) {
+        console.error("Product loading error:", error);
+
+        productStatus.textContent =
+          "Products load nahi hue. Internet check karke retry karein.";
+
+      } finally {
+        reloadButton.disabled = false;
+      }
+    }
+
+    // Products display karna
+    function displayProducts(list) {
+      productGrid.replaceChildren();
+
+      if (list.length === 0) {
+        productStatus.textContent = "Koi matching product nahi mila.";
+        return;
+      }
+
+      productStatus.textContent = "";
+
+      list.forEach(product => {
+        const card = document.createElement("article");
+        card.className = "product-card";
+
+        const image = document.createElement("img");
+        image.className = "product-image";
+        image.src = product.thumbnail;
+        image.alt = product.title;
+        image.loading = "lazy";
+
+        image.addEventListener("error", () => {
+          image.removeAttribute("src");
+          image.alt = "Image unavailable";
+        }, { once: true });
+
+        const info = document.createElement("div");
+        info.className = "product-info";
+
+        const category = document.createElement("div");
+        category.className = "category";
+        category.textContent = product.category;
+
+        const title = document.createElement("h3");
+        title.textContent = product.title;
+
+        const price = document.createElement("div");
+        price.className = "price";
+        price.textContent = formatPrice(product.price);
+
+        const addButton = document.createElement("button");
+        addButton.className = "add-btn";
+        addButton.textContent = "Add to Cart";
+        addButton.type = "button";
+
+        addButton.addEventListener("click", () => {
+          addToCart(product.id);
+        });
+
+        info.append(category, title, price, addButton);
+        card.append(image, info);
+
+        productGrid.appendChild(card);
+      });
+    }
+
+    // Cart mein product add karna
+    function addToCart(productId) {
+      const currentQuantity = cart[productId] || 0;
+
+      if (currentQuantity >= 99) {
+        alert("Maximum quantity 99 hai.");
+        return;
+      }
+
+      cart[productId] = currentQuantity + 1;
+
+      if (saveCart()) {
+        renderCart();
+      }
+    }
+
+    // Quantity change karna
+    function changeQuantity(productId, amount) {
+      const currentQuantity = cart[productId] || 0;
+      const newQuantity = currentQuantity + amount;
+
+      if (newQuantity <= 0) {
+        removeFromCart(productId);
+        return;
+      }
+
+      if (newQuantity > 99) {
+        alert("Maximum quantity 99 hai.");
+        return;
+      }
+
+      cart[productId] = newQuantity;
+
+      if (saveCart()) {
+        renderCart();
+      }
+    }
+
+    // Product remove karna
+    function removeFromCart(productId) {
+      delete cart[productId];
+
+      if (saveCart()) {
+        renderCart();
+      }
+    }
+
+    // Cart aur total prices display karna
+    function renderCart() {
+      cartItems.replaceChildren();
+
+      const cartProductIds = Object.keys(cart);
+      let itemCount = 0;
+      let subtotal = 0;
+
+      cartProductIds.forEach(id => {
+        const product = products.find(
+          item => item.id === Number(id)
+        );
+
+        if (!product) {
+          return;
+        }
+
+        const quantity = cart[id];
+
+        itemCount += quantity;
+        subtotal += product.price * quantity;
+
+        const row = document.createElement("div");
+        row.className = "cart-item";
+
+        const image = document.createElement("img");
+        image.className = "cart-image";
+        image.src = product.thumbnail;
+        image.alt = product.title;
+
+        image.addEventListener("error", () => {
+          image.removeAttribute("src");
+          image.alt = "Image unavailable";
+        }, { once: true });
+
+        const details = document.createElement("div");
+
+        const name = document.createElement("h3");
+        name.className = "cart-name";
+        name.textContent = product.title;
+
+        const linePrice = document.createElement("div");
+        linePrice.className = "cart-price";
+        linePrice.textContent =
+          formatPrice(product.price * quantity);
+
+        const controls = document.createElement("div");
+        controls.className = "quantity-controls";
+
+        const minusButton = document.createElement("button");
+        minusButton.textContent = "−";
+        minusButton.type = "button";
+        minusButton.setAttribute("aria-label", "Decrease quantity");
+
+        minusButton.addEventListener("click", () => {
+          changeQuantity(product.id, -1);
+        });
+
+        const quantityText = document.createElement("span");
+        quantityText.textContent = quantity;
+
+        const plusButton = document.createElement("button");
+        plusButton.textContent = "+";
+        plusButton.type = "button";
+        plusButton.setAttribute("aria-label", "Increase quantity");
+
+        plusButton.addEventListener("click", () => {
+          changeQuantity(product.id, 1);
+        });
+
+        controls.append(minusButton, quantityText, plusButton);
+        details.append(name, linePrice, controls);
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "remove-btn";
+        removeButton.textContent = "Remove";
+        removeButton.type = "button";
+
+        removeButton.addEventListener("click", () => {
+          removeFromCart(product.id);
+        });
+
+        row.append(image, details, removeButton);
+        cartItems.appendChild(row);
+      });
+
+      cartCount.textContent = itemCount;
+
+      const isEmpty = itemCount === 0;
+      cartMessage.hidden = !isEmpty;
+
+      if (isEmpty) {
+        cartMessage.textContent = "Aapka cart abhi empty hai.";
+      }
+
+      const shipping = isEmpty ? 0 : (subtotal >= 100 ? 0 : 5);
+      const grandTotal = subtotal + shipping;
+
+      subtotalElement.textContent = formatPrice(subtotal);
+      shippingElement.textContent = isEmpty
+        ? "$0.00"
+        : shipping === 0
+          ? "FREE"
+          : formatPrice(shipping);
+
+      grandTotalElement.textContent = formatPrice(grandTotal);
+      checkoutButton.disabled = isEmpty;
+    }
+
+    // Search functionality
+    searchInput.addEventListener("input", () => {
+      const searchText = searchInput.value.trim().toLowerCase();
+
+      const filteredProducts = products.filter(product =>
+        product.title.toLowerCase().includes(searchText)
+      );
+
+      displayProducts(filteredProducts);
+    });
+
+    // Reload products
+    reloadButton.addEventListener("click", loadProducts);
+
+    // Demo checkout — real order nahi hai
+    checkoutButton.addEventListener("click", () => {
+      const totalItems = Object.values(cart).reduce(
+        (sum, quantity) => sum + quantity,
+        0
+      );
+
+      alert(
+        "Demo checkout successful!\n" +
+        "Total items: " + totalItems + "\n" +
+        "Total amount: " + grandTotalElement.textContent +
+        "\n\nYe practice project hai. Real order place nahi hua."
+      );
+    });
+
+    // Page start
+    loadProducts();
+  </script>
+</body>
+</html>

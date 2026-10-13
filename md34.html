@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 31 - Login & Register</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 25px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      color: #1e293b;
+      background: linear-gradient(135deg, #dbeafe, #ede9fe, #fce7f3);
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .brand-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 65px;
+      height: 65px;
+      border-radius: 20px;
+      color: white;
+      font-size: 30px;
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+      box-shadow: 0 10px 25px #4f46e533;
+    }
+
+    .brand h1 {
+      margin: 14px 0 7px;
+      font-size: 28px;
+    }
+
+    .brand p {
+      margin: 0;
+      color: #64748b;
+    }
+
+    .card {
+      padding: 28px;
+      background: white;
+      border: 1px solid #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 18px 50px #312e8115;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      margin-bottom: 24px;
+      background: #f1f5f9;
+      border-radius: 12px;
+    }
+
+    .tab {
+      padding: 12px;
+      color: #64748b;
+      background: transparent;
+      border: none;
+      border-radius: 9px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      color: #4338ca;
+      background: white;
+      box-shadow: 0 2px 8px #0000000c;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 25px;
+    }
+
+    .description {
+      margin: 0 0 24px;
+      color: #64748b;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+      background: white;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px #6366f120;
+    }
+
+    .password-wrap {
+      display: flex;
+      gap: 8px;
+    }
+
+    .password-wrap input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .show-password {
+      padding: 0 12px;
+      color: #4338ca;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .options {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin: 8px 0 20px;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .options input {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: #4f46e5;
+    }
+
+    .options label {
+      margin: 0;
+      font-weight: normal;
+      cursor: pointer;
+    }
+
+    .primary-button {
+      width: 100%;
+      padding: 14px;
+      color: white;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .primary-button:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .message {
+      display: none;
+      margin-top: 17px;
+      padding: 12px;
+      border-radius: 9px;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .message.error {
+      display: block;
+      color: #991b1b;
+      background: #fee2e2;
+    }
+
+    .message.success {
+      display: block;
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 420px) {
+      .card {
+        padding: 21px 17px;
+      }
+
+      .brand h1 {
+        font-size: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrapper">
+
+    <header class="brand">
+      <div class="brand-icon">✦</div>
+      <h1>Welcome Back!</h1>
+      <p>Your next project starts here.</p>
+    </header>
+
+    <section class="card">
+
+      <div class="tabs" role="group" aria-label="Choose a form">
+        <button
+          class="tab active"
+          id="loginTab"
+          type="button"
+          aria-pressed="true"
+        >
+          Login
+        </button>
+
+        <button
+          class="tab"
+          id="registerTab"
+          type="button"
+          aria-pressed="false"
+        >
+          Register
+        </button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm">
+        <h2>Login to your account</h2>
+        <p class="description">
+          Enter your details to continue.
+        </p>
+
+        <div class="field">
+          <label for="loginEmail">Email address</label>
+          <input
+            id="loginEmail"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="loginPassword">Password</label>
+
+          <div class="password-wrap">
+            <input
+              id="loginPassword"
+              type="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            >
+
+            <button
+              class="show-password"
+              type="button"
+              data-target="loginPassword"
+            >
+              Show
+            </button>
+          </div>
+        </div>
+
+        <button class="primary-button" type="submit">
+          Login
+        </button>
+
+        <div
+          id="loginMessage"
+          class="message"
+          role="status"
+          aria-live="polite"
+        ></div>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="registerForm" hidden>
+        <h2>Create an account</h2>
+        <p class="description">
+          Fill in the details to try the registration demo.
+        </p>
+
+        <div class="field">
+          <label for="registerName">Full name</label>
+          <input
+            id="registerName"
+            type="text"
+            placeholder="Enter your name"
+            minlength="2"
+            maxlength="60"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="registerEmail">Email address</label>
+          <input
+            id="registerEmail"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="registerPassword">Create password</label>
+
+          <div class="password-wrap">
+            <input
+              id="registerPassword"
+              type="password"
+              placeholder="At least 8 characters"
+              minlength="8"
+              maxlength="128"
+              autocomplete="new-password"
+              required
+            >
+
+            <button
+              class="show-password"
+              type="button"
+              data-target="registerPassword"
+            >
+              Show
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm password</label>
+
+          <div class="password-wrap">
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Enter password again"
+              minlength="8"
+              maxlength="128"
+              autocomplete="new-password"
+              required
+            >
+
+            <button
+              class="show-password"
+              type="button"
+              data-target="confirmPassword"
+            >
+              Show
+            </button>
+          </div>
+        </div>
+
+        <div class="options">
+          <input id="terms" type="checkbox" required>
+          <label for="terms">
+            I agree to the demo terms and conditions.
+          </label>
+        </div>
+
+        <button class="primary-button" type="submit">
+          Create Account
+        </button>
+
+        <div
+          id="registerMessage"
+          class="message"
+          role="status"
+          aria-live="polite"
+        ></div>
+      </form>
+
+    </section>
+
+    <footer class="footer">
+      Day 31 · HTML + CSS + JavaScript
+      <br>
+      Practice UI only — no real account is created.
+    </footer>
+
+  </main>
+
+  <script>
+    const loginTab = document.getElementById("loginTab");
+    const registerTab = document.getElementById("registerTab");
+
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+
+    const loginMessage = document.getElementById("loginMessage");
+    const registerMessage = document.getElementById("registerMessage");
+
+    // Switch between Login and Register
+    function showForm(formName) {
+      const isLogin = formName === "login";
+
+      loginForm.hidden = !isLogin;
+      registerForm.hidden = isLogin;
+
+      loginTab.classList.toggle("active", isLogin);
+      registerTab.classList.toggle("active", !isLogin);
+
+      loginTab.setAttribute("aria-pressed", String(isLogin));
+      registerTab.setAttribute("aria-pressed", String(!isLogin));
+
+      clearMessage(loginMessage);
+      clearMessage(registerMessage);
+    }
+
+    loginTab.addEventListener("click", function() {
+      showForm("login");
+    });
+
+    registerTab.addEventListener("click", function() {
+      showForm("register");
+    });
+
+    // Show or Hide password
+    document.querySelectorAll(".show-password").forEach(button => {
+      button.addEventListener("click", function() {
+        const input = document.getElementById(
+          button.dataset.target
+        );
+
+        const isHidden = input.type === "password";
+
+        input.type = isHidden ? "text" : "password";
+        button.textContent = isHidden ? "Hide" : "Show";
+      });
+    });
+
+    // Display a message
+    function showMessage(element, text, type) {
+      element.textContent = text;
+      element.className = "message " + type;
+    }
+
+    function clearMessage(element) {
+      element.textContent = "";
+      element.className = "message";
+    }
+
+    // Demo login validation
+    loginForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      clearMessage(loginMessage);
+
+      if (!loginForm.checkValidity()) {
+        loginForm.reportValidity();
+        return;
+      }
+
+      showMessage(
+        loginMessage,
+        "Form validation successful! Real login ke liye backend authentication connect karna hoga.",
+        "success"
+      );
+    });
+
+    // Demo registration validation
+    registerForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      clearMessage(registerMessage);
+
+      if (!registerForm.checkValidity()) {
+        registerForm.reportValidity();
+        return;
+      }
+
+      const password = document.getElementById(
+        "registerPassword"
+      ).value;
+
+      const confirmPassword = document.getElementById(
+        "confirmPassword"
+      ).value;
+
+      if (password !== confirmPassword) {
+        showMessage(
+          registerMessage,
+          "Passwords match nahi karte. Dono fields check karo.",
+          "error"
+        );
+
+        return;
+      }
+
+      showMessage(
+        registerMessage,
+        "Registration form valid hai! Ye demo hai — account create ya save nahi hua.",
+        "success"
+      );
+    });
+  </script>
+</body>
+</html>

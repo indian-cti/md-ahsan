@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #173b75;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            width: 200px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px #ccd3df;
+        }
+
+        .card button {
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>My Skills</h1>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>HTML</h2>
+            <p>Website ka structure.</p>
+            <button>Learn HTML</button>
+        </div>
+
+        <div class="card">
+            <h2>CSS</h2>
+            <p>Website ka design.</p>
+            <button>Learn CSS</button>
+        </div>
+
+        <div class="card">
+            <h2>JavaScript</h2>
+            <p>Website mein functionality.</p>
+            <button>Learn JS</button>
+        </div>
+
+         <div class="card">
+            <h2>Python</h2>
+            <p>Website mein functionality.</p>
+            <button>Learn Python</button>
+        </div>
+         <div class="card">
+            <h2>C++</h2>
+            <p>Website mein functionality.</p>
+            <button>Learn C++</button>
+        </div>
+
+    </div>
+
+</body>
+</html>

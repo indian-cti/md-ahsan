@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 32 - Student Management</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 25px;
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4338ca;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      margin: 20px 0;
+      border-radius: 14px;
+      box-shadow: 0 5px 18px #00000012;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 7px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px 3px 5px 0;
+      border: none;
+      border-radius: 7px;
+      background: #4f46e5;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    .delete-btn {
+      background: #dc2626;
+    }
+
+    .student {
+      padding: 14px;
+      margin: 12px 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .student h3 {
+      margin-top: 0;
+    }
+
+    #message {
+      color: #4338ca;
+      font-weight: bold;
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🎓 Student Management System</h1>
+    <p style="text-align:center">Day 32 — JavaScript OOP</p>
+
+    <div class="card">
+      <h2>Add Student</h2>
+
+      <input id="name" type="text"
+        placeholder="Enter student name">
+
+      <input id="age" type="number"
+        placeholder="Enter age" min="1" max="120">
+
+      <input id="course" type="text"
+        placeholder="Enter course">
+
+      <button onclick="addStudent()">Add Student</button>
+      <p id="message" aria-live="polite"></p>
+    </div>
+
+    <div class="card">
+      <h2>Search Students</h2>
+
+      <input id="search" type="text"
+        placeholder="Search by name or course"
+        oninput="showStudents()">
+
+      <h3 id="count">Total Students: 0</h3>
+      <div id="studentList"></div>
+    </div>
+  </div>
+
+  <script>
+    // CLASS: Student ka blueprint
+    class Student {
+      constructor(name, age, course) {
+        this.name = name;
+        this.age = age;
+        this.course = course;
+      }
+
+      // METHOD: Student ki details
+      getDetails() {
+        return `${this.name} | Age: ${this.age} | Course: ${this.course}`;
+      }
+    }
+
+    // Student objects store honge
+    const students = [
+      new Student("Rahul", 18, "Web Design"),
+      new Student("Ammar", 19, "Python")
+    ];
+
+    function addStudent() {
+      const name = document.getElementById("name").value.trim();
+      const age = Number(document.getElementById("age").value);
+      const course = document.getElementById("course").value.trim();
+      const message = document.getElementById("message");
+
+      if (!name || !course || !age || age < 1 || age > 120) {
+        message.textContent = "Please enter valid student details!";
+        return;
+      }
+
+      // NEW: Naya Student object banana
+      const student = new Student(name, age, course);
+
+      students.push(student);
+
+      document.getElementById("name").value = "";
+      document.getElementById("age").value = "";
+      document.getElementById("course").value = "";
+
+      message.textContent = "Student added successfully!";
+      showStudents();
+    }
+
+    function showStudents() {
+      const list = document.getElementById("studentList");
+      const search = document.getElementById("search")
+        .value.trim().toLowerCase();
+
+      list.replaceChildren();
+
+      const filteredStudents = students
+        .map((student, index) => ({ student, index }))
+        .filter(item =>
+          item.student.name.toLowerCase().includes(search) ||
+          item.student.course.toLowerCase().includes(search)
+        );
+
+      document.getElementById("count").textContent =
+        `Total Students: ${students.length} | Showing: ${filteredStudents.length}`;
+
+      if (filteredStudents.length === 0) {
+        list.textContent = "No students found.";
+        return;
+      }
+
+      filteredStudents.forEach(({ student, index }) => {
+        const card = document.createElement("div");
+        card.className = "student";
+
+        const heading = document.createElement("h3");
+        heading.textContent = student.name;
+
+        const details = document.createElement("p");
+        details.textContent = student.getDetails();
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete Student";
+        deleteButton.className = "delete-btn";
+        deleteButton.onclick = () => deleteStudent(index);
+
+        card.append(heading, details, deleteButton);
+        list.appendChild(card);
+      });
+    }
+
+    function deleteStudent(index) {
+      students.splice(index, 1);
+      document.getElementById("message").textContent =
+        "Student deleted!";
+      showStudents();
+    }
+
+    // Website start hote hi students dikhao
+    showStudents();
+  </script>
+</body>
+</html>

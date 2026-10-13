@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 37 - Quiz App</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+      display: grid;
+      place-items: center;
+      font-family: Arial, sans-serif;
+      color: #1e293b;
+      background: linear-gradient(135deg, #dbeafe, #ede9fe);
+    }
+
+    .app {
+      width: 100%;
+      max-width: 650px;
+      padding: 28px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px #1e293b20;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4f46e5;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .progress {
+      height: 9px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    #progressBar {
+      height: 100%;
+      width: 0;
+      background: #6366f1;
+      transition: width 0.25s;
+    }
+
+    #question {
+      margin-top: 24px;
+      line-height: 1.5;
+    }
+
+    #options {
+      display: grid;
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .option {
+      padding: 14px;
+      text-align: left;
+      background: #f8fafc;
+      color: #1e293b;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .option:hover:not(:disabled) {
+      border-color: #818cf8;
+    }
+
+    .option.correct {
+      background: #dcfce7;
+      border-color: #16a34a;
+    }
+
+    .option.wrong {
+      background: #fee2e2;
+      border-color: #dc2626;
+    }
+
+    button:disabled {
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .main-btn {
+      padding: 12px 18px;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .main-btn:disabled {
+      background: #a5b4fc;
+    }
+
+    #feedback {
+      min-height: 25px;
+      font-weight: bold;
+    }
+
+    #result {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    #finalScore {
+      font-size: 30px;
+      color: #4f46e5;
+      font-weight: bold;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 480px) {
+      .app { padding: 18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <h1>🧠 Web Dev Quiz</h1>
+    <p style="text-align:center">Day 37 — JavaScript Project</p>
+
+    <section id="quiz">
+      <div class="top">
+        <span id="questionCount">Question 1 / 10</span>
+        <span>⏱️ <span id="timer">15</span>s</span>
+        <span id="score">Score: 0</span>
+      </div>
+
+      <div class="progress">
+        <div id="progressBar"></div>
+      </div>
+
+      <h2 id="question"></h2>
+      <div id="options"></div>
+      <p id="feedback" aria-live="polite"></p>
+
+      <div class="controls">
+        <button class="main-btn" id="nextBtn" disabled>
+          Next Question →
+        </button>
+      </div>
+    </section>
+
+    <section id="result" hidden>
+      <h2>🎉 Quiz Completed!</h2>
+      <p id="finalScore"></p>
+      <p id="message"></p>
+      <button class="main-btn" id="restartBtn">Play Again</button>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        question: "1. HTML ka full form kya hai?",
+        options: [
+          "Hyper Text Markup Language",
+          "High Text Machine Language",
+          "Hyper Tool Multi Language",
+          "Home Text Markup Language"
+        ],
+        answer: 0
+      },
+      {
+        question: "2. CSS ka use kis liye hota hai?",
+        options: [
+          "Database banane",
+          "Website style karne",
+          "Server band karne",
+          "Files delete karne"
+        ],
+        answer: 1
+      },
+      {
+        question: "3. JavaScript mein variable declare karne ka ek tarika?",
+        options: ["style", "design", "let", "body"],
+        answer: 2
+      },
+      {
+        question: "4. Button click event ke liye kaunsa event use hota hai?",
+        options: ["hover", "click", "changeColor", "pressKeyOnly"],
+        answer: 1
+      },
+      {
+        question: "5. Array banane ka sahi example?",
+        options: [
+          "let a = (1, 2, 3)",
+          "let a = <1, 2, 3>",
+          "let a = {1; 2; 3}",
+          "let a = [1, 2, 3]"
+        ],
+        answer: 3
+      },
+      {
+        question: "6. API data fetch karne ke liye kya use kar sakte hain?",
+        options: ["fetch()", "paint()", "border()", "heading()"],
+        answer: 0
+      },
+      {
+        question: "7. Flexbox activate karne ke liye kya likhte hain?",
+        options: [
+          "display: image",
+          "position: flex",
+          "display: flex",
+          "flex: display"
+        ],
+        answer: 2
+      },
+      {
+        question: "8. JSON ka common use kya hai?",
+        options: [
+          "Images paint karna",
+          "Data exchange karna",
+          "CSS remove karna",
+          "Screen clean karna"
+        ],
+        answer: 1
+      },
+      {
+        question: "9. Error handle karne ke liye kaunsa block use hota hai?",
+        options: ["try/catch", "if/color", "style/error", "loop/css"],
+        answer: 0
+      },
+      {
+        question: "10. Mobile-friendly website ke liye kya important hai?",
+        options: [
+          "Fixed width only",
+          "Very large text only",
+          "No viewport tag",
+          "Responsive design"
+        ],
+        answer: 3
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let timeLeft = 15;
+    let timerId = null;
+    let answered = false;
+
+    const quiz = document.getElementById("quiz");
+    const result = document.getElementById("result");
+    const questionTitle = document.getElementById("question");
+    const optionsContainer = document.getElementById("options");
+    const nextBtn = document.getElementById("nextBtn");
+    const timerDisplay = document.getElementById("timer");
+    const feedback = document.getElementById("feedback");
+
+    function stopTimer() {
+      if (timerId !== null) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+    }
+
+    function startTimer() {
+      stopTimer();
+      timeLeft = 15;
+      timerDisplay.textContent = timeLeft;
+
+      timerId = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+          stopTimer();
+          if (!answered) {
+            feedback.textContent = "Time up! Correct answer highlight kiya hai.";
+            chooseAnswer(-1);
+          }
+        }
+      }, 1000);
+    }
+
+    function loadQuestion() {
+      stopTimer();
+      answered = false;
+
+      const item = questions[currentQuestion];
+
+      document.getElementById("questionCount").textContent =
+        `Question ${currentQuestion + 1} / ${questions.length}`;
+
+      document.getElementById("score").textContent = `Score: ${score}`;
+
+      document.getElementById("progressBar").style.width =
+        `${(currentQuestion / questions.length) * 100}%`;
+
+      questionTitle.textContent = item.question;
+      feedback.textContent = "";
+      optionsContainer.replaceChildren();
+      nextBtn.disabled = true;
+
+      item.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.className = "option";
+        button.textContent = option;
+        button.addEventListener("click", () => chooseAnswer(index));
+        optionsContainer.appendChild(button);
+      });
+
+      startTimer();
+    }
+
+    function chooseAnswer(selectedIndex) {
+      if (answered) return;
+
+      answered = true;
+      stopTimer();
+
+      const item = questions[currentQuestion];
+      const buttons = optionsContainer.querySelectorAll("button");
+
+      buttons.forEach((button, index) => {
+        button.disabled = true;
+
+        if (index === item.answer) {
+          button.classList.add("correct");
+        }
+
+        if (index === selectedIndex && index !== item.answer) {
+          button.classList.add("wrong");
+        }
+      });
+
+      if (selectedIndex === item.answer) {
+        score++;
+        feedback.textContent = "Correct! 🎉";
+      } else if (selectedIndex === -1) {
+        feedback.textContent = "Time up! Correct answer shown above.";
+      } else {
+        feedback.textContent = "Not quite! Correct answer shown in green.";
+      }
+
+      document.getElementById("score").textContent = `Score: ${score}`;
+      nextBtn.disabled = false;
+      nextBtn.textContent =
+        currentQuestion === questions.length - 1
+          ? "See Result →"
+          : "Next Question →";
+    }
+
+    function showResult() {
+      stopTimer();
+      quiz.hidden = true;
+      result.hidden = false;
+
+      document.getElementById("progressBar").style.width = "100%";
+      document.getElementById("finalScore").textContent =
+        `${score} / ${questions.length}`;
+
+      const percentage = (score / questions.length) * 100;
+
+      document.getElementById("message").textContent =
+        percentage >= 80 ? "Excellent work! 🌟" :
+        percentage >= 50 ? "Good job! Keep practising! 💪" :
+        "Keep learning — you can improve! 📚";
+    }
+
+    nextBtn.addEventListener("click", () => {
+      if (!answered) return;
+
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      currentQuestion = 0;
+      score = 0;
+      timeLeft = 15;
+      result.hidden = true;
+      quiz.hidden = false;
+      loadQuestion();
+    });
+
+    loadQuestion();
+  </script>
+</body>
+</html>

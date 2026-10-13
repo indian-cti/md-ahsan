@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Checker</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #101827;
+            color: white;
+            text-align: center;
+            padding: 40px 15px;
+        }
+
+        .box {
+            max-width: 350px;
+            margin: auto;
+            padding: 25px;
+            background: #243247;
+            border-radius: 15px;
+        }
+
+        input, button {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+        }
+
+        button {
+            background: #00c896;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1>Login Checker 🔐</h1>
+
+        <input id="username" type="text"
+               placeholder="Enter username">
+
+        <input id="password" type="password"
+               placeholder="Enter password">
+
+        <button onclick="checkLogin()">Login</button>
+
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function checkLogin() {
+            let username =
+                document.getElementById("username").value;
+
+            let password =
+                document.getElementById("password").value;
+
+            if (username === "" || password === "") {
+                document.getElementById("result").textContent =
+                    "Please fill both fields!";
+            }
+            else if (
+                username === "INDIAN CTI" &&
+                password === "123456789"
+            ) {
+                document.getElementById("result").textContent =
+                    "Login Successful! 🎉";
+            }
+            else {
+                document.getElementById("result").textContent =
+                    "Username or password is incorrect!";
+            }
+        }
+    </script>
+</body>
+</html>

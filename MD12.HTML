@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Admission Form</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #edf2ff;
+            padding: 20px;
+        }
+
+        .form-box {
+            max-width: 450px;
+            margin: 20px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+        }
+
+        h1 {
+            color: #1d4ed8;
+            text-align: center;
+        }
+
+        label {
+            display: inline-block;
+            margin: 8px 0;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+        }
+
+        fieldset {
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-box">
+        <h1>Course Admission</h1>
+
+        <form>
+            <label for="student">Student Name</label>
+            <input type="text" id="student"
+                   placeholder="Enter your name" required>
+
+            <fieldset>
+                <legend>Study Mode</legend>
+
+                <input type="radio" id="online"
+                       name="mode" value="Online" required>
+                <label for="online">Online</label>
+
+                <input type="radio" id="offline"
+                       name="mode" value="Offline">
+                <label for="offline">Offline</label>
+            </fieldset>
+
+             <fieldset>
+                <legend>GENDER</legend>
+
+                <input type="radio" id="MALE"
+                       name="GENDER" value="MALE" required>
+                <label for="MALE">MAIL</label>
+
+                <input type="radio" id="FEMALE"
+                       name="GENDER" value="FEMALE">
+                <label for="FEMALE">FEMALE</label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Choose Your Skills</legend>
+
+                <input type="checkbox" id="html" name="skills" value="HTML">
+                <label for="html">HTML</label><br>
+
+                <input type="checkbox" id="css" name="skills" value="CSS">
+                <label for="css">CSS</label><br>
+
+                <input type="checkbox" id="js" name="skills" value="JavaScript">
+                <label for="js">JavaScript</label>
+            </fieldset>
+
+            <label for="message">Why do you want to learn?</label>
+            <textarea id="message" rows="4"
+                      placeholder="Write your message"></textarea>
+
+            <button type="submit">Submit Form</button>
+        </form>
+    </div>
+
+</body>
+</html>

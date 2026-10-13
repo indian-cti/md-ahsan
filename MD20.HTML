@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Counter</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #101827;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+        .box {
+            max-width: 400px;
+            margin: auto;
+            padding: 25px;
+            background: #243247;
+            border-radius: 15px;
+        }
+
+        button {
+            background: #00c896;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #result {
+            line-height: 2;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1>🔢 Number Counter</h1>
+        <p>Button click karke numbers dekho.</p>
+
+        <button onclick="showNumbers()">Start Counter</button>
+
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function showNumbers() {
+            let output = "";
+
+            for (let i = 1; i <= 10; i++) {
+                output += i + " ";
+            }
+
+            document.getElementById("result").textContent = output;
+        }
+    </script>
+
+</body>
+</html>

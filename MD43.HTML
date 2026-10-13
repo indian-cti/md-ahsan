@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Advanced Portfolio</title>
+
+  <style>
+    :root {
+      --bg: #101827;
+      --card: #1c2940;
+      --text: #f5f7ff;
+      --muted: #b7c2d8;
+      --accent: #8b5cf6;
+    }
+
+    body.light {
+      --bg: #f4f6fc;
+      --card: #ffffff;
+      --text: #182033;
+      --muted: #5c667a;
+      --accent: #6d3be8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: 0.3s;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 18px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #80808033;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    button, .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover, .btn:hover {
+      opacity: 0.85;
+      transform: translateY(-2px);
+    }
+
+    section {
+      padding: 65px 8%;
+    }
+
+    .hero {
+      min-height: 65vh;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 62px);
+      line-height: 1.15;
+      margin: 15px 0;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p, .muted {
+      color: var(--muted);
+      max-width: 650px;
+    }
+
+    .hero .btn {
+      display: inline-block;
+      margin-top: 22px;
+      text-decoration: none;
+    }
+
+    h2 {
+      font-size: 30px;
+      margin-bottom: 22px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .filters button {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid #80808055;
+    }
+
+    .filters button.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .project, .skill, .contact-box {
+      background: var(--card);
+      padding: 22px;
+      border-radius: 14px;
+      border: 1px solid #80808025;
+    }
+
+    .project {
+      animation: appear 0.35s ease;
+    }
+
+    .project h3 {
+      margin-bottom: 8px;
+    }
+
+    .project p {
+      color: var(--muted);
+      margin-bottom: 15px;
+    }
+
+    .tag {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 15px;
+    }
+
+    .skill {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+      max-width: 550px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 13px;
+      border-radius: 8px;
+      border: 1px solid #80808055;
+      background: var(--card);
+      color: var(--text);
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    #formMessage {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+      border-top: 1px solid #80808033;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 18px 5%; }
+      section { padding: 45px 5%; }
+      nav { gap: 12px; }
+      .hero { min-height: 55vh; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">MyPortfolio.</div>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+      <button id="themeBtn" type="button">☀️ Light Mode</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <p class="tag">WELCOME TO MY PORTFOLIO</p>
+      <h1>Hello, I'm a <span>INDIAN CTI Web Developer</span></h1>
+      <p>
+        I create modern, responsive and interactive websites
+        using HTML, CSS and JavaScript.
+      </p>
+      <a class="btn" href="#projects">Explore My Projects ↓</a>
+    </section>
+
+    <section id="projects">
+      <h2>My Projects 💻</h2>
+      <p class="muted">Category select karke projects filter karo.</p>
+
+      <div class="filters">
+        <button class="active" data-filter="all">All</button>
+        <button data-filter="html">HTML/CSS</button>
+        <button data-filter="javascript">JavaScript</button>
+        <button data-filter="app">Web Apps</button>
+      </div>
+
+      <div class="projects" id="projectList">
+        <article class="project" data-category="html">
+          <span class="tag">HTML/CSS</span>
+          <h3>Landing Page</h3>
+          <p>A modern and responsive website homepage.</p>
+        </article>
+
+        <article class="project" data-category="javascript">
+          <span class="tag">JAVASCRIPT</span>
+          <h3>Quiz App</h3>
+          <p>An interactive quiz with questions and scores.</p>
+        </article>
+
+        <article class="project" data-category="app">
+          <span class="tag">WEB APP</span>
+          <h3>Expense Tracker</h3>
+          <p>Track expenses and calculate your total.</p>
+        </article>
+
+        <article class="project" data-category="javascript">
+          <span class="tag">JAVASCRIPT</span>
+          <h3>Weather App</h3>
+          <p>Search for weather information by city.</p>
+        </article>
+
+        <article class="project" data-category="app">
+          <span class="tag">WEB APP</span>
+          <h3>Task Manager</h3>
+          <p>Add and manage your daily tasks.</p>
+        </article>
+
+        <article class="project" data-category="html">
+          <span class="tag">HTML/CSS</span>
+          <h3>Portfolio Design</h3>
+          <p>A personal website to showcase your work.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2>My Skills ⚡</h2>
+      <div class="skills">
+        <div class="skill">🌐 HTML</div>
+        <div class="skill">🎨 CSS</div>
+        <div class="skill">⚙️ JavaScript</div>
+        <div class="skill">📱 Responsive Design</div>
+        <div class="skill">🔗 APIs</div>
+        <div class="skill">💾 Local Storage</div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Me 📩</h2>
+      <div class="contact-box">
+        <p class="muted">Form fill karo aur validation test karo.</p>
+
+        <form id="contactForm">
+          <input
+            type="text"
+            id="name"
+            placeholder="Your Name"
+            required
+          >
+
+          <input
+            type="email"
+            id="email"
+            placeholder="Your Email"
+            required
+          >
+
+          <textarea
+            id="message"
+            placeholder="Your Message (minimum 20 characters)"
+            minlength="20"
+            required
+          ></textarea>
+
+          <button type="submit">Validate Form</button>
+          <p id="formMessage" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> MyPortfolio. Made with ❤️
+  </footer>
+
+  <script>
+    // 1. Dark / Light Mode
+    const themeBtn = document.getElementById("themeBtn");
+
+    themeBtn.addEventListener("click", function () {
+      document.body.classList.toggle("light");
+
+      const isLight = document.body.classList.contains("light");
+
+      themeBtn.textContent = isLight
+        ? "🌙 Dark Mode"
+        : "☀️ Light Mode";
+    });
+
+    // 2. Project Category Filter
+    const filterButtons = document.querySelectorAll("[data-filter]");
+    const projects = document.querySelectorAll(".project");
+
+    filterButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const category = button.dataset.filter;
+
+        filterButtons.forEach(function (btn) {
+          btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        projects.forEach(function (project) {
+          const matches =
+            category === "all" ||
+            project.dataset.category === category;
+
+          project.hidden = !matches;
+        });
+      });
+    });
+
+    // 3. Contact Form Validation
+    const contactForm = document.getElementById("contactForm");
+    const formMessage = document.getElementById("formMessage");
+
+    contactForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      if (name.length < 2) {
+        formMessage.textContent =
+          "Please enter a name with at least 2 characters.";
+        return;
+      }
+
+      if (message.length < 10) {
+        formMessage.textContent =
+          "Message must contain at least 10 characters.";
+        return;
+      }
+
+      formMessage.textContent =
+        "Form validation successful! 🎉";
+
+      contactForm.reset();
+    });
+
+    // 4. Automatic Year
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+</body>
+</html>

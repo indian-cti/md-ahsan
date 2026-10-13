@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: white;
+            background: linear-gradient(135deg, #101827, #314b72);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            padding: 28px;
+            text-align: center;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px #0005;
+        }
+
+        .avatar {
+            width: 85px;
+            height: 85px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 15px;
+            background: #0d9488;
+            border-radius: 50%;
+            font-size: 42px;
+        }
+
+        h1 {
+            color: #5eead4;
+        }
+
+        .detail {
+            padding: 12px;
+            margin: 10px 0;
+            background: #334155;
+            border-radius: 9px;
+            text-align: left;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 9px;
+            background: #2dd4bf;
+            color: #102a2a;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5eead4;
+        }
+
+        #status {
+            color: #facc15;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="avatar">🎓</div>
+
+        <h1 id="studentName">Student Profile</h1>
+        <p>Welcome to the Student Dashboard!</p>
+
+        <div class="detail" id="studentAge"></div>
+        <div class="detail" id="studentCity"></div>
+        <div class="detail" id="studentCourse"></div>
+        <div class="detail" id="studentMarks"></div>
+
+        <button onclick="showProfile()">
+            Show Student Profile
+        </button>
+
+        <p id="status"></p>
+    </div>
+
+    <script>
+        // Create a JavaScript object.
+        let student = {
+            name: "Aman",
+            age: 18,
+            city: "Delhi",
+            course: "Web Development",
+            marks: 85
+        };
+
+        // Display the object values.
+        function showProfile() {
+            document.getElementById("studentName").textContent =
+                student.name;
+
+            document.getElementById("studentAge").textContent =
+                "Age: " + student.age;
+
+            document.getElementById("studentCity").textContent =
+                "City: " + student.city;
+
+            document.getElementById("studentCourse").textContent =
+                "Course: " + student.course;
+
+            document.getElementById("studentMarks").textContent =
+                "Marks: " + student.marks + "/100";
+
+            document.getElementById("status").textContent =
+                "Profile loaded successfully!";
+        }
+
+        // Display the profile automatically.
+        showProfile();
+    </script>
+
+</body>
+</html>
+

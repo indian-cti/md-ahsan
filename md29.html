@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Task Manager</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #f8fafc;
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+        }
+
+        .app {
+            width: 100%;
+            max-width: 650px;
+            margin: 25px auto;
+            padding: 25px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px #0004;
+        }
+
+        h1 {
+            color: #5eead4;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        input {
+            min-width: 0;
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #64748b;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 11px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            background: #2dd4bf;
+            color: #102a2a;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 13px;
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        .task-name {
+            flex: 1;
+            overflow-wrap: anywhere;
+        }
+
+        .task.completed .task-name {
+            color: #94a3b8;
+            text-decoration: line-through;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .task input[type="checkbox"] {
+            flex: 0 0 auto;
+            width: 18px;
+            height: 18px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #0f172a;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stats strong {
+            display: block;
+            color: #5eead4;
+            font-size: 22px;
+        }
+
+        #message {
+            min-height: 22px;
+            color: #facc15;
+        }
+
+        @media (max-width: 450px) {
+            form {
+                flex-direction: column;
+            }
+
+            .app {
+                padding: 17px;
+            }
+
+            .task {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="app">
+        <h1>✅ Task Manager</h1>
+
+        <p class="subtitle">
+            Organize your day like a developer!
+        </p>
+
+        <form id="taskForm">
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Enter a new task..."
+                maxlength="150"
+                required
+            >
+
+            <button class="add-btn" type="submit">
+                + Add Task
+            </button>
+        </form>
+
+        <div class="stats">
+            <div>
+                <strong id="totalCount">0</strong>
+                Total
+            </div>
+
+            <div>
+                <strong id="completedCount">0</strong>
+                Completed
+            </div>
+
+            <div>
+                <strong id="pendingCount">0</strong>
+                Pending
+            </div>
+        </div>
+
+        <p id="message" role="status" aria-live="polite"></p>
+
+        <section id="taskList"></section>
+    </main>
+
+    <script>
+        "use strict";
+
+        // 1. Select the HTML elements.
+        const taskForm = document.getElementById("taskForm");
+        const taskInput = document.getElementById("taskInput");
+        const taskList = document.getElementById("taskList");
+        const message = document.getElementById("message");
+
+        // 2. Load saved tasks safely.
+        function loadTasks() {
+            try {
+                const savedTasks = localStorage.getItem("professionalTasks");
+
+                if (savedTasks === null) {
+                    return [];
+                }
+
+                const parsedTasks = JSON.parse(savedTasks);
+
+                if (!Array.isArray(parsedTasks)) {
+                    return [];
+                }
+
+                return parsedTasks.filter(function(task) {
+                    return task &&
+                        typeof task.id === "string" &&
+                        typeof task.name === "string" &&
+                        typeof task.completed === "boolean";
+                });
+            } catch (error) {
+                return [];
+            }
+        }
+
+        let tasks = loadTasks();
+
+        // 3. Save tasks in the browser.
+        function saveTasks() {
+            try {
+                localStorage.setItem(
+                    "professionalTasks",
+                    JSON.stringify(tasks)
+                );
+
+                return true;
+            } catch (error) {
+                message.textContent =
+                    "Unable to save. Browser storage may be full or unavailable.";
+
+                return false;
+            }
+        }
+
+        // 4. Update task statistics.
+        function updateStats() {
+            const completed = tasks.filter(function(task) {
+                return task.completed;
+            }).length;
+
+            document.getElementById("totalCount").textContent =
+                tasks.length;
+
+            document.getElementById("completedCount").textContent =
+                completed;
+
+            document.getElementById("pendingCount").textContent =
+                tasks.length - completed;
+        }
+
+        // 5. Display all tasks.
+        function renderTasks() {
+            taskList.replaceChildren();
+
+            if (tasks.length === 0) {
+                const empty = document.createElement("p");
+                empty.textContent = "No tasks yet. Add your first task!";
+                taskList.appendChild(empty);
+            }
+
+            tasks.forEach(function(task) {
+                const row = document.createElement("div");
+                row.className = "task";
+
+                if (task.completed) {
+                    row.classList.add("completed");
+                }
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = task.completed;
+                checkbox.setAttribute(
+                    "aria-label",
+                    "Mark " + task.name + " as complete"
+                );
+
+                checkbox.addEventListener("change", function() {
+                    const oldValue = task.completed;
+                    task.completed = checkbox.checked;
+
+                    if (saveTasks()) {
+                        message.textContent = task.completed
+                            ? "Task completed!"
+                            : "Task marked as pending.";
+
+                        renderTasks();
+                    } else {
+                        task.completed = oldValue;
+                        renderTasks();
+                    }
+                });
+
+                const name = document.createElement("span");
+                name.className = "task-name";
+                name.textContent = task.name;
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-btn";
+                deleteButton.textContent = "Delete";
+
+                deleteButton.addEventListener("click", function() {
+                    const oldTasks = tasks;
+
+                    tasks = tasks.filter(function(item) {
+                        return item.id !== task.id;
+                    });
+
+                    if (saveTasks()) {
+                        message.textContent = "Task deleted.";
+                        renderTasks();
+                    } else {
+                        tasks = oldTasks;
+                        renderTasks();
+                    }
+                });
+
+                row.appendChild(checkbox);
+                row.appendChild(name);
+                row.appendChild(deleteButton);
+
+                taskList.appendChild(row);
+            });
+
+            updateStats();
+        }
+
+        // 6. Add a new task.
+        taskForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const name = taskInput.value.trim();
+
+            if (name === "") {
+                message.textContent = "Please enter a task.";
+                return;
+            }
+
+            const newTask = {
+                id: Date.now().toString() +
+                    Math.random().toString(16).slice(2),
+                name: name,
+                completed: false
+            };
+
+            tasks.unshift(newTask);
+
+            if (saveTasks()) {
+                message.textContent = "Task added successfully!";
+                taskForm.reset();
+                renderTasks();
+                taskInput.focus();
+            } else {
+                tasks = tasks.filter(function(task) {
+                    return task.id !== newTask.id;
+                });
+
+                renderTasks();
+            }
+        });
+
+        // 7. Render saved tasks on startup.
+        renderTasks();
+    </script>
+
+</body>
+</html>

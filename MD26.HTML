@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Control Panel</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 25px 15px;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 25px auto;
+            padding: 25px;
+            text-align: center;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 20px;
+            box-shadow: 0 12px 35px #0005;
+        }
+
+        h1 {
+            color: #38e8b0;
+        }
+
+        .panel {
+            margin: 20px 0;
+            padding: 18px;
+            background: #334155;
+            border-radius: 12px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #2dd4bf;
+            color: #102a2a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        #hoverBox {
+            padding: 22px;
+            margin-top: 12px;
+            background: #475569;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        #message {
+            min-height: 24px;
+            color: #facc15;
+            overflow-wrap: anywhere;
+        }
+
+        .counter {
+            font-size: 35px;
+            font-weight: bold;
+            color: #5eead4;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>⚡ Interactive Control Panel</h1>
+        <p>Learn JavaScript Events by practicing!</p>
+
+        <!-- Click Event -->
+        <section class="panel">
+            <h2>1. Click Event</h2>
+
+            <p class="counter" id="count">0</p>
+
+            <button id="increaseBtn">Increase +</button>
+            <button id="decreaseBtn">Decrease -</button>
+            <button id="resetBtn">Reset</button>
+        </section>
+
+        <!-- Input Event -->
+        <section class="panel">
+            <h2>2. Input Event</h2>
+
+            <input
+                type="text"
+                id="nameInput"
+                placeholder="Type your name..."
+                maxlength="40"
+            >
+
+            <p id="liveText">Your name will appear here.</p>
+        </section>
+
+        <!-- Mouse Events -->
+        <section class="panel">
+            <h2>3. Mouse Events</h2>
+
+            <div id="hoverBox">
+                Move your mouse over this box!
+            </div>
+        </section>
+
+        <!-- Background Event -->
+        <section class="panel">
+            <h2>4. Background Color</h2>
+
+            <button data-color="#0f172a">Dark Blue</button>
+            <button data-color="#14532d">Green</button>
+            <button data-color="#581c87">Purple</button>
+        </section>
+
+        <p id="message" role="status">Ready to practice!</p>
+
+    </main>
+
+    <script>
+        // Select HTML elements.
+        const countElement = document.getElementById("count");
+        const increaseBtn = document.getElementById("increaseBtn");
+        const decreaseBtn = document.getElementById("decreaseBtn");
+        const resetBtn = document.getElementById("resetBtn");
+
+        const nameInput = document.getElementById("nameInput");
+        const liveText = document.getElementById("liveText");
+
+        const hoverBox = document.getElementById("hoverBox");
+        const message = document.getElementById("message");
+
+        // Counter value.
+        let count = 0;
+
+        function updateCounter() {
+            countElement.textContent = count;
+        }
+
+        // Click events.
+        increaseBtn.addEventListener("click", function() {
+            count++;
+            updateCounter();
+            message.textContent = "Counter increased!";
+        });
+
+        decreaseBtn.addEventListener("click", function() {
+            count--;
+            updateCounter();
+            message.textContent = "Counter decreased!";
+        });
+
+        resetBtn.addEventListener("click", function() {
+            count = 0;
+            updateCounter();
+            message.textContent = "Counter reset!";
+        });
+
+        // Input event: updates as the user types.
+        nameInput.addEventListener("input", function() {
+            const name = nameInput.value.trim();
+
+            if (name === "") {
+                liveText.textContent = "Your name will appear here.";
+            } else {
+                liveText.textContent = "Hello, " + name + "!";
+            }
+        });
+
+        // Mouse events.
+        hoverBox.addEventListener("mouseenter", function() {
+            hoverBox.style.backgroundColor = "#0f766e";
+            hoverBox.textContent = "Mouse entered! 🎉";
+        });
+
+        hoverBox.addEventListener("mouseleave", function() {
+            hoverBox.style.backgroundColor = "#475569";
+            hoverBox.textContent = "Move your mouse over this box!";
+        });
+
+        // Background buttons.
+        const colorButtons = document.querySelectorAll("[data-color]");
+
+        colorButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                document.body.style.backgroundColor =
+                    button.dataset.color;
+
+                message.textContent = "Background color changed!";
+            });
+        });
+    </script>
+
+</body>
+</html>

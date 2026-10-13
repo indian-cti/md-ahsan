@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Marks Calculator</title>
+</head>
+<body>
+    <h1>Student Marks</h1>
+    <p id="result"></p>
+    <script>
+        let maths = 80;
+        let english = 75;
+        let computer = 90;
+
+        let total = maths + english + computer;
+        let percentage = (total / 300) * 100;
+
+        document.getElementById("result").textContent =
+            "Total Marks: " + total +
+            " | Percentage: " + percentage + "%";
+    </script>
+</body>
+</html>
