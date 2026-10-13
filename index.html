@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INDIAN CTI | Online Test</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Arial,sans-serif;
+  background:#f1f5f9;color:#172033;line-height:1.6
+}
+header{
+  background:linear-gradient(135deg,#101827,#3730a3);
+  color:white;text-align:center;padding:28px 15px
+}
+header h1{margin:0;font-size:clamp(25px,5vw,38px)}
+header p{margin:5px 0;color:#dbeafe}
+.container{width:min(950px,94%);margin:24px auto}
+.card{
+  background:white;padding:22px;border-radius:16px;
+  margin-bottom:18px;box-shadow:0 5px 20px #0f172a0d
+}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px
+}
+input[type=text]{
+  width:100%;padding:12px;margin-top:6px;
+  border:1px solid #cbd5e1;border-radius:9px;font-size:16px
+}
+input[type=tel]{
+  width:100%;padding:12px;margin-top:6px;
+  border:1px solid #cbd5e1;border-radius:9px;font-size:16px
+}
+button{
+  border:0;padding:12px 20px;border-radius:9px;
+  font-size:16px;font-weight:bold;cursor:pointer
+}
+.primary{background:#4f46e5;color:white}
+.primary:hover{background:#3730a3}
+.secondary{background:#e2e8f0;color:#172033}
+.center{text-align:center}
+.badges{display:flex;flex-wrap:wrap;gap:95px;margin:15px 0}
+.badge{
+  background:#eef2ff;color:#3730a3;padding:7px 12px;
+  border-radius:20px;font-weight:bold
+}
+#testArea,#result,#timerBar{display:none}
+#timerBar{
+  position:sticky;top:0;z-index:5;
+  background:#f1f5f9;padding:12px 0
+}
+.timerline{
+  display:flex;justify-content:space-between;
+  gap:10px;font-weight:bold
+}
+#timer{color:#b91c1c;font-size:20px}
+.progress{
+  height:8px;background:#dbeafe;border-radius:20px;
+  overflow:hidden;margin-top:8px
+}
+#progressFill{height:100%;width:0;background:#4f46e5}
+.question{
+  border:1px solid #e2e8f0;border-radius:12px;
+  padding:18px;margin:16px 0
+}
+.question h3{font-size:17px;margin:0 0 12px}
+.qno{color:#4f46e5}
+.option{
+  display:flex;gap:10px;padding:10px;margin:7px 0;
+  border:1px solid #dbe2ea;border-radius:9px;cursor:pointer
+}
+.option:hover{background:#f8fafc}
+.option input{margin-top:5px;accent-color:#4f46e5}
+.option:has(input:checked){
+  background:#eef2ff;border-color:#4f46e5
+}
+#result{overflow-wrap:anywhere}
+.score{font-size:34px;color:#4f46e5;font-weight:bold}
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px
+}
+.stat{background:#f8fafc;padding:14px;text-align:center;border-radius:10px}
+.stat strong{display:block;font-size:24px}
+.review{padding:13px 0;border-top:1px solid #e2e8f0}
+.good{color:#15803d;font-weight:bold}
+.bad{color:#b91c1c;font-weight:bold}
+footer{text-align:center;padding:20px;color:#64748b}
+@media(max-width:600px){
+  .card{padding:15px}
+  .timerline{font-size:14px}
+}
+@media print{
+  header{background:white;color:black}
+  #timerBar,.no-print,footer{display:none!important}
+  body{background:white}
+  .card{box-shadow:none}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1><font face="Trebuchet MS, Impact, sans-serif" color="#ffffff" size="6">
+      <font color="#f97316">INDIAN</font>
+      <font color="#38bdf8">COMPUTER</font>
+      <font color="#4ade80">TRAINING</font> 
+      <font color="red">INSTITUTE</font>
+    </font></h1>
+  <p>Online MCQ Examination</p>
+  <p>Diploma in Web Designing | Beginner Level 1st Test By Md Sir</p>
+</header>
+
+<main class="container">
+
+<section class="card" id="intro">
+  <h2>Welcome To INDIAN CTI Online Test</h2>
+  <p>Test Shuru Karne Se Pehle Apni Details Bharo.</p>
+
+  <div class="grid">
+    <label>Student Name
+      <input type="text" id="studentName" placeholder="Apna naam likho">
+    </label>
+
+    <label>Roll Number
+      <input type="text" id="rollNumber" placeholder="Roll number likho">
+    </label>
+     <label>WhatsApp Number
+  <input type="tel" id="WhatsAppNumber" placeholder="Apna WhatsApp number likho" maxlength="10" minlength="10" pattern="[0-9]{10}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+</label>
+  </div>
+
+  <div class="badges">
+    <span class="badge">Questions: 50</span>
+    <span class="badge">Total Marks: 100</span>
+    <span class="badge">Time: 40 Minutes</span>
+    <span class="badge">2 Marks Each</span>
+  </div>
+
+  <h3>Test Instructions</h3>
+  <ul>
+    <li>Total 50 multiple-choice Questions hain.</li>
+    <li>Har sahi jawab ke 2 marks milenge.</li>
+    <li>Galat jawab par marks nahi katenge.</li>
+    <li>Test ka time 40 minutes hai.</li>
+    <li>START TEST par click karne ke baad password maanga jayega.</li>
+    <li>Sahi password ke baad hi test aur timer shuru hoga.</li>
+    <li>Time khatam hone par test automatically submit hoga.</li>
+  </ul>
+
+  <p><strong>Note:</strong>Yeh practice test hai. Is version mein result browser par dikhega; <b>"INDIAN CTI"</b> Ke main server par automatic send hoga.</p>
+
+  <div class="center">
+    <button class="primary" id="startBtn" type="button">
+      START TEST
+    </button>
+  </div>
+</section>
+
+<div id="timerBar">
+  <div class="timerline">
+    <span id="answered">Answered: 0 / 50</span>
+    <span>Time Left: <span id="timer">40:00</span></span>
+  </div>
+  <div class="progress">
+    <div id="progressFill"></div>
+  </div>
+</div>
+
+<form id="testArea">
+  <div id="questions"></div>
+  <div class="card center no-print">
+    <p>Apne answers check karke test submit karo.</p>
+    <button class="primary" type="submit">SUBMIT TEST</button>
+  </div>
+</form>
+
+<section class="card" id="result"></section>
+
+</main>
+
+<footer>© INDIAN CTI | Online Examination</footer>
+
+<script>
+/*
+  IMPORTANT:
+  Browser-side password is only a basic gate.
+  Real security ke liye server-side password verification zaroori hai.
+*/
+
+const TEST_PASSWORD = "mdicti876627";
+const TOTAL_MARKS_PER_QUESTION = 2;
+const EXAM_SECONDS = 40 * 60;
+
+const QUESTIONS = [
+["HTML ka full form kya hai?",["Hyper Text Markup Language","High Text Machine Language","Hyper Tool Marking Language","Home Text Markup Language"],0],
+["HTML document ka root element kaun sa hai?",["body","head","html","title"],2],
+["Webpage ka title kis tag mein likhte hain?",["h1","title","p","footer"],1],
+["Visible webpage content aam taur par kis tag mein hota hai?",["head","meta","title","body"],3],
+["HTML heading ka sabse bada level kaun sa hai?",["h1","h6","head","heading"],0],
+["Paragraph banane ke liye kaunsa tag hai?",["para","text","p","pg"],2],
+["New line ke liye kaunsa tag use hota hai?",["hr","br","line","lb"],1],
+["Horizontal line ke liye kaunsa tag use hota hai?",["br","line","break","hr"],3],
+["Hyperlink banane ke liye kaunsa tag hai?",["a","link","href","url"],0],
+["Link ka address kis attribute mein dete hain?",["src","alt","href","action"],2],
+["Image lagane ke liye kaunsa tag hai?",["picturefile","image","src","img"],3],
+["Image ka path kis attribute mein hota hai?",["src","href","link","path"],0],
+["Image ka alternate text kis attribute mein likhte hain?",["title","alt","name","text"],1],
+["Bullet list banane ke liye kaunsa tag hai?",["ol","li","ul","list"],2],
+["Numbered list banane ke liye kaunsa tag hai?",["ol","ul","li","dl"],0],
+["List item ke liye kaunsa tag hai?",["item","list","ul","li"],3],
+["Table banane ke liye kaunsa tag hai?",["tr","table","td","th"],1],
+["Table ki row ke liye kaunsa tag hai?",["td","th","tr","row"],2],
+["Table data cell ke liye kaunsa tag hai?",["td","tr","table","cell"],0],
+["Table heading cell ke liye kaunsa tag hai?",["thead","tr","td","th"],3],
+["HTML form banane ke liye kaunsa tag hai?",["input","form","label","button"],1],
+["Text input ke liye kaunsa element hai?",["text","textbox","input","enter"],2],
+["Checkbox ka sahi input type kya hai?",["checkbox","check","tick","select"],0],
+["Radio button ka sahi input type kya hai?",["circle","option","radio-button","radio"],3],
+["Button banane ke liye kaunsa tag hai?",["click","button","press","btn"],1],
+["CSS ka full form kya hai?",["Computer Style Sheets","Creative Style System","Cascading Style Sheets","Colorful Style Sheets"],2],
+["External CSS file jodne ke liye kaunsa tag hai?",["link","style","css","script"],0],
+["Text ka color badalne ki CSS property kya hai?",["font","text-style","background","color"],3],
+["Background color ki CSS property kya hai?",["color","background-color","bgcolor-style","back-color"],1],
+["Font size badalne ki CSS property kya hai?",["text-size","font","font-size","size"],2],
+["Element ke andar ki spacing kya kehlati hai?",["padding","margin","border","gap-only"],0],
+["Element ke bahar ki spacing kya kehlati hai?",["padding","outline","border","margin"],3],
+["CSS ID selector kis symbol se shuru hota hai?",[".","#","*","@"],1],
+["CSS class selector kis symbol se shuru hota hai?",["#","@"," .","."],3],
+["CSS universal selector ka symbol kya hai?",["#","*",".","&"],1],
+["JavaScript ka main use kya hai?",["Webpage mein interactivity add karna","Sirf images banana","Sirf database banana","HTML delete karna"],0],
+["HTML mein JavaScript add karne ka tag kya hai?",["javascript","js","script","code"],2],
+["JavaScript mein variable declare karne ka keyword kaun sa hai?",["style","let","html","href"],1],
+["Browser console mein message dikhane ka command kya hai?",["print.page()","show()","message()","console.log()"],3],
+["HTML comment ka sahi syntax kaun sa hai?",["<!-- comment -->","// comment","** comment **","## comment"],0],
+["HTML metadata aam taur par kahan hota hai?",["footer","main","head","section"],2],
+["Responsive design ka matlab kya hai?",["Sirf desktop ke liye design","Alag screen sizes par layout adjust hona","Sirf bold text","Website offline hona"],1],
+["Semantic HTML tag ka example kaun sa hai?",["div","span","b","header"],3],
+["Navigation links ke liye semantic tag kaun sa hai?",["nav","navigate","links","menu-text"],0],
+["Main content ke liye semantic tag kaun sa hai?",["content","body-main","main","section-text"],2],
+["HTML mein video add karne ka tag kya hai?",["movie","video","mediafile","play"],1],
+["HTML mein audio add karne ka tag kya hai?",["sound","music","mp3","audio"],3],
+["Link ko naye tab mein kholne ke liye kya use hota hai?",["target='_blank'","open='new'","tab='yes'","window='next'"],0],
+["HTML5 document declaration kya hai?",["html5","doctype html","<!DOCTYPE html>","document"],2],
+["Mobile viewport set karne ke liye meta name kya hai?",["mobile","screen","device","viewport"],3]
+];
+
+const letters = ["A","B","C","D"];
+const TOTAL_MARKS = QUESTIONS.length * TOTAL_MARKS_PER_QUESTION;
+
+const intro = document.getElementById("intro");
+const testArea = document.getElementById("testArea");
+const questionsBox = document.getElementById("questions");
+const timerBar = document.getElementById("timerBar");
+const timerText = document.getElementById("timer");
+const resultBox = document.getElementById("result");
+
+let remaining = EXAM_SECONDS;
+let timerInterval = null;
+let started = false;
+let submitted = false;
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[char]));
+}
+
+function renderQuestions(){
+  questionsBox.innerHTML = QUESTIONS.map((q,i)=>`
+    <section class="question">
+      <h3><span class="qno">Q${i+1}.</span> ${escapeHTML(q[0])}</h3>
+      ${q[1].map((option,j)=>`
+        <label class="option">
+          <input type="radio" name="q${i}" value="${j}">
+          <span><strong>${letters[j]}.</strong> ${escapeHTML(option)}</span>
+        </label>
+      `).join("")}
+    </section>
+  `).join("");
+}
+
+function updateProgress(){
+  const answeredCount = QUESTIONS.filter((q,i)=>
+    testArea.querySelector(`input[name="q${i}"]:checked`)
+  ).length;
+
+  document.getElementById("answered").textContent =
+    `Answered: ${answeredCount} / ${QUESTIONS.length}`;
+
+  document.getElementById("progressFill").style.width =
+    `${answeredCount / QUESTIONS.length * 100}%`;
+}
+
+function updateTimerDisplay(){
+  const minutes = String(Math.floor(remaining / 60)).padStart(2,"0");
+  const seconds = String(remaining % 60).padStart(2,"0");
+  timerText.textContent = `${minutes}:${seconds}`;
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+
+  timerInterval = setInterval(()=>{
+    if(submitted) return;
+
+    remaining--;
+    updateTimerDisplay();
+
+    if(remaining <= 0){
+      remaining = 0;
+      updateTimerDisplay();
+      clearInterval(timerInterval);
+      submitTest(true);
+    }
+  },1000);
+}
+
+function startTest(){
+  if(started || submitted) return;
+
+  const name = document.getElementById("studentName").value.trim();
+  const roll = document.getElementById("rollNumber").value.trim();
+
+  if(!name || !roll){
+    alert("Pehle Student Name aur Roll Number bharo.");
+    return;
+  }
+
+  // Password prompt
+  const enteredPassword = prompt("INDIAN CTI Test Password enter karein:");
+
+  if(enteredPassword === null){
+    return;
+  }
+
+  if(enteredPassword !== TEST_PASSWORD){
+    alert("Wrong Password! Test start nahi hua.");
+    return;
+  }
+
+  if(!confirm("Password correct hai! OK dabate hi 40-minute timer start hoga.")){
+    return;
+  }
+
+  started = true;
+  intro.style.display = "none";
+  testArea.style.display = "block";
+  timerBar.style.display = "block";
+
+  remaining = EXAM_SECONDS;
+  updateTimerDisplay();
+
+  // Timer starts only after correct password and confirmation.
+  startTimer();
+
+  timerBar.scrollIntoView({behavior:"smooth"});
+}
+
+function submitTest(autoSubmit = false){
+  if(!started || submitted) return;
+
+  if(!autoSubmit){
+    const answeredCount = QUESTIONS.filter((q,i)=>
+      testArea.querySelector(`input[name="q${i}"]:checked`)
+    ).length;
+
+    if(!confirm(
+      `Aapne ${answeredCount} / ${QUESTIONS.length} questions answer kiye hain. Test submit karein?`
+    )){
+      return;
+    }
+  }
+
+  submitted = true;
+  clearInterval(timerInterval);
+
+  let correct = 0;
+  let wrong = 0;
+  let skipped = 0;
+
+  const reviewHTML = QUESTIONS.map((q,i)=>{
+    const selected = testArea.querySelector(`input[name="q${i}"]:checked`);
+    const selectedValue = selected ? Number(selected.value) : null;
+    const correctIndex = q[2];
+
+    if(selectedValue === null) skipped++;
+    else if(selectedValue === correctIndex) correct++;
+    else wrong++;
+
+    let status;
+
+    if(selectedValue === null){
+      status = `<span>Not answered</span>`;
+    }else if(selectedValue === correctIndex){
+      status = `<span class="good">Correct answer ✓</span>`;
+    }else{
+      status = `<span class="bad">Wrong answer ✗</span>`;
+    }
+
+    const yourAnswer = selectedValue === null
+      ? "Not answered"
+      : `${letters[selectedValue]}. ${escapeHTML(q[1][selectedValue])}`;
+
+    return `
+      <div class="review">
+        <strong>Q${i+1}. ${escapeHTML(q[0])}</strong><br>
+        ${status}<br>
+        Your Answer: ${yourAnswer}<br>
+        <span class="good">
+          Correct Answer: ${letters[correctIndex]}. ${escapeHTML(q[1][correctIndex])}
+        </span>
+      </div>
+    `;
+  }).join("");
+
+  const marks = correct * TOTAL_MARKS_PER_QUESTION;
+  const percentage = Math.round((marks / TOTAL_MARKS) * 100);
+  const name = escapeHTML(document.getElementById("studentName").value.trim());
+  const roll = escapeHTML(document.getElementById("rollNumber").value.trim());
+
+  resultBox.innerHTML = `
+    <h2>INDIAN CTI — Test Result</h2>
+    <p><strong>Student Name:</strong> ${name}</p>
+    <p><strong>Roll Number:</strong> ${roll}</p>
+
+    <div class="score">${marks} / ${TOTAL_MARKS} Marks</div>
+
+    <p>${autoSubmit
+      ? "Time khatam ho gaya. Test automatically submit ho gaya."
+      : "Test successfully submitted!"}</p>
+
+    <div class="stats">
+      <div class="stat"><strong>${correct}</strong>Correct</div>
+      <div class="stat"><strong>${wrong}</strong>Wrong</div>
+      <div class="stat"><strong>${skipped}</strong>Skipped</div>
+      <div class="stat"><strong>${percentage}%</strong>Percentage</div>
+    </div>
+
+    <h3>Answer Key and Review</h3>
+    ${reviewHTML}
+
+    <div class="center no-print">
+      <button class="secondary" type="button" onclick="window.print()">
+        Print Result
+      </button>
+      <button class="primary" type="button" onclick="location.reload()">
+        Take Test Again
+      </button>
+    </div>
+  `;
+
+  testArea.querySelectorAll("input,button").forEach(el=>{
+    el.disabled = true;
+  });
+
+  resultBox.style.display = "block";
+  resultBox.scrollIntoView({behavior:"smooth"});
+}
+
+document.getElementById("startBtn").addEventListener("click",startTest);
+testArea.addEventListener("change",updateProgress);
+
+testArea.addEventListener("submit",event=>{
+  event.preventDefault();
+  submitTest(false);
+});
+
+// Page load par timer start nahi hota.
+renderQuestions();
+updateProgress();
+updateTimerDisplay();
+</script>
+
+</body>
+</html>
