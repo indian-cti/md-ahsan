@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INDIAN CTI - Software Test</title>
+
+<style>
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+ font-family:Arial,sans-serif;
+}
+
+body{
+ background:linear-gradient(135deg,#10152f,#29205c);
+ color:white;
+ min-height:100vh;
+ padding:20px;
+}
+
+.container{
+ max-width:850px;
+ margin:25px auto;
+ padding:30px;
+ background:#ffffff12;
+ border:1px solid #ffffff30;
+ border-radius:18px;
+ box-shadow:0 10px 40px #0005;
+}
+
+h1{text-align:center;color:#ffd166;}
+h2{text-align:center;margin:20px 0;}
+p{text-align:center;color:#ddd;margin:12px;}
+
+input,select{
+ width:100%;
+ padding:14px;
+ margin:10px 0;
+ border:0;
+ border-radius:8px;
+ font-size:16px;
+}
+
+button{
+ border:0;
+ border-radius:8px;
+ padding:13px 20px;
+ margin:6px;
+ background:#ffb703;
+ color:#171717;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+button:hover{background:#fb8500;}
+
+.center{text-align:center;}
+
+#test,#result{display:none;}
+
+.timer{
+ text-align:right;
+ color:#ffd166;
+ font-size:22px;
+ font-weight:bold;
+}
+
+.question{
+ background:#ffffff15;
+ padding:20px;
+ border-radius:12px;
+ margin:20px 0;
+}
+
+.option{
+ display:block;
+ background:#ffffff18;
+ padding:14px;
+ margin:12px 0;
+ border-radius:8px;
+ cursor:pointer;
+}
+
+.option:hover{background:#ffffff35;}
+
+.option input{
+ width:auto;
+ margin-right:10px;
+}
+
+.progress{
+ height:9px;
+ background:#555;
+ border-radius:10px;
+ overflow:hidden;
+}
+
+#bar{
+ height:9px;
+ background:#ffb703;
+ width:0%;
+}
+
+.score{
+ font-size:45px;
+ text-align:center;
+ color:#ffd166;
+ margin:20px;
+}
+
+.whatsapp{
+ background:#20c766;
+ color:white;
+}
+
+.secondary{background:#ddd;}
+
+@media(max-width:600px){
+ .container{padding:18px}
+ button{padding:12px}
+}
+
+@media print{
+ body{background:white;color:black}
+ .no-print{display:none!important}
+ .container{background:white;color:black;box-shadow:none}
+ p{color:black}
+}
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME PAGE -->
+
+<div class="container" id="welcome">
+
+<h1>INDIAN COMPUTER TRAINING INSTITUTE</h1>
+
+<h2>NOTEPAD / WORDPAD / MS PAINT TEST</h2>
+
+<p>Welcome to Indian Computer Training Institute</p>
+
+<hr>
+
+<h3 style="margin-top:20px">Student Information</h3>
+
+<input id="student" placeholder="Enter Student Full Name">
+
+<input id="roll" placeholder="Enter Roll Number">
+
+<!-- PASSWORD HIDDEN INPUT -->
+<input
+ id="examPassword"
+ type="password"
+ placeholder="Enter Exam Password"
+ autocomplete="off"
+>
+
+<select id="batch">
+<option value="">Select Batch Time</option>
+<option>09:00 AM - 10:00 AM</option>
+<option>10:00 AM - 11:00 AM</option>
+<option>11:00 AM - 12:00 PM</option>
+<option>12:00 PM - 01:00 PM</option>
+<option>02:00 PM - 03:00 PM</option>
+<option>03:00 PM - 04:00 PM</option>
+<option>04:00 PM - 05:00 PM</option>
+<option>05:00 PM - 06:00 PM</option>
+<option>06:00 PM - 07:00 PM</option>
+<option>07:00 PM - 08:00 PM</option>
+<option>08:00 PM - 09:00 PM</option>
+<option>09:00 PM - 10:00 PM</option>
+<option>Other Batch</option>
+</select>
+
+<div class="center">
+
+<p>Total Questions: 40</p>
+<p>Total Marks: 40</p>
+<p>Time: 20 Minutes</p>
+<p>Passing Marks: 22</p>
+
+<button onclick="startTest()">START EXAM</button>
+
+</div>
+</div>
+
+
+<!-- TEST PAGE -->
+
+<div class="container" id="test">
+
+<h1>INDIAN COMPUTER TRAINING INSTITUTE</h1>
+
+<h2>SOFTWARE EXAM</h2>
+
+<div class="timer">
+Time: <span id="time">20:00</span>
+</div>
+
+<div class="progress">
+<div id="bar"></div>
+</div>
+
+<h3 id="qnumber" style="margin-top:20px"></h3>
+
+<div class="question">
+
+<h3 id="question"></h3>
+
+<div id="options"></div>
+
+</div>
+
+<p id="attempted"></p>
+
+<div class="center no-print">
+
+<button class="secondary" onclick="previous()">PREVIOUS</button>
+
+<button onclick="next()">NEXT</button>
+
+<button onclick="submitTest()">SUBMIT TEST</button>
+
+</div>
+</div>
+
+
+<!-- RESULT PAGE -->
+
+<div class="container" id="result">
+
+<h1>INDIAN COMPUTER TRAINING INSTITUTE</h1>
+
+<h2>EXAMINATION RESULT</h2>
+
+<p id="resultName"></p>
+<p id="resultRoll"></p>
+<p id="resultBatch"></p>
+
+<div class="score" id="marks"></div>
+
+<h2 id="percentage"></h2>
+
+<h2 id="status"></h2>
+
+<p id="correct"></p>
+<p id="wrong"></p>
+<p id="unattempted"></p>
+
+<div class="center no-print">
+
+<button class="whatsapp" onclick="sendWhatsApp()">
+SEND RESULT ON WHATSAPP
+</button>
+
+<button onclick="window.print()">PRINT RESULT</button>
+
+<button onclick="location.reload()">RETAKE TEST</button>
+
+</div>
+</div>
+
+
+<script>
+
+// EXAM PASSWORD
+const EXAM_PASSWORD = "indiancti134";
+
+// INSTITUTE WHATSAPP NUMBER
+const instituteWhatsApp = "918882543147";
+
+
+// =================================
+// 40 QUESTIONS
+// =================================
+const questions = [
+
+/* NOTEPAD - ADVANCED 14 QUESTIONS */
+
+{q:"Notepad mein Ctrl + H shortcut ka kya use hai?",o:["Find","Replace","Save","Print"],a:1},
+
+{q:"Notepad mein F5 key press karne par kya hota hai?",o:["Date aur Time insert hota hai","File save hoti hai","Text delete hota hai","Print hota hai"],a:0},
+
+{q:"Notepad mein Go To feature ka use kya hai?",o:["Specific line par jaana","Font change karna","Image insert karna","File rename karna"],a:0},
+
+{q:"Notepad mein UTF-8 encoding ka kya purpose hai?",o:["Text ko compress karna","Different languages ke characters support karna","Image edit karna","File print karna"],a:1},
+
+{q:"Notepad mein .txt file ko .html extension se save karne par kya ho sakta hai?",o:["HTML document ke roop mein save ho sakti hai","File automatically delete ho jayegi","Computer restart hoga","Image ban jayegi"],a:0},
+
+{q:"Notepad mein Ctrl + End ka kya kaam hai?",o:["Document ke start par jaana","Document ke end par jaana","Next file kholna","Text print karna"],a:1},
+
+{q:"Notepad mein Ctrl + Home ka kya kaam hai?",o:["Document ke beginning par jaana","Document ke end par jaana","File save karna","Text replace karna"],a:0},
+
+{q:"Notepad mein Word Wrap OFF hone par long line ka kya ho sakta hai?",o:["Line automatically next line mein wrap nahi hogi","Text bold ho jayega","File lock ho jayegi","Text delete ho jayega"],a:0},
+
+{q:"Notepad mein Ctrl + Backspace ka kya kaam hai?",o:["Ek character delete karna","Pichhla word delete karna","Poora document delete karna","File save karna"],a:1},
+
+{q:"Notepad mein Ctrl + Left Arrow ka kya kaam hai?",o:["Pichhle word ke beginning par jaana","Next line par jaana","Document close karna","Text print karna"],a:0},
+
+{q:"Notepad mein status bar ka Line aur Column data kis kaam aata hai?",o:["Cursor ki position jaanne ke liye","File size badhane ke liye","Font install karne ke liye","Page print karne ke liye"],a:0},
+
+{q:"Notepad mein plain text aur rich text mein kya difference hai?",o:["Plain text mein rich formatting store nahi hoti","Dono hamesha same hote hain","Plain text sirf images store karta hai","Rich text mein characters nahi hote"],a:0},
+
+{q:"Notepad mein Ctrl + D ka standard shortcut kya hai?",o:["Find Next in some versions","Save As","Print","New File"],a:0},
+
+{q:"Notepad mein unsaved changes ke saath window close karne par kya hota hai?",o:["Save karne ka prompt aa sakta hai","Computer format ho jata hai","File automatically print hoti hai","Internet disconnect hota hai"],a:0},
+
+
+/* WORDPAD - ADVANCED 13 QUESTIONS */
+
+{q:"WordPad mein RTF ka full form kya hai?",o:["Rich Text Format","Read Text File","Random Text Format","Rich Table File"],a:0},
+
+{q:"RTF format ka main advantage kya hai?",o:["Basic text formatting preserve karna","Video editing","Operating system install karna","Virus remove karna"],a:0},
+
+{q:"WordPad mein Ctrl + E ka kya use hai?",o:["Center alignment","Left alignment","Right alignment","Justify"],a:0},
+
+{q:"WordPad mein Ctrl + J ka kya use hota hai?",o:["Justify alignment","Bold","Italic","Underline"],a:0},
+
+{q:"WordPad mein Ctrl + L ka kya use hai?",o:["Left alignment","Right alignment","Center alignment","Print"],a:0},
+
+{q:"WordPad mein Ctrl + R ka kya use hai?",o:["Right alignment","Left alignment","Replace","Refresh"],a:0},
+
+{q:"WordPad mein Superscript ka use kya hai?",o:["Text ko baseline se upar dikhana","Text ko underline karna","Text ko delete karna","Text ko center karna"],a:0},
+
+{q:"WordPad mein Subscript ka use kya hai?",o:["Text ko baseline se neeche dikhana","Text ko bold karna","Text ko rotate karna","Text ko print karna"],a:0},
+
+{q:"WordPad mein page margins ka kya purpose hai?",o:["Page ke edges aur text ke beech space set karna","Font color change karna","Image crop karna","File password banana"],a:0},
+
+{q:"WordPad mein ruler ka use kis liye hota hai?",o:["Indentation aur tab positions set karna","Virus scan karna","Document encrypt karna","Audio record karna"],a:0},
+
+{q:"WordPad mein Print Preview ka purpose kya hai?",o:["Print se pehle document ka layout dekhna","Document delete karna","Font download karna","Text translate karna"],a:0},
+
+{q:"WordPad mein RTF file ko plain TXT mein save karne par kya ho sakta hai?",o:["Formatting information remove ho sakti hai","Image resolution badh jayegi","File video ban jayegi","Document automatically email hoga"],a:0},
+
+{q:"Windows ke naye versions mein WordPad ke baare mein sahi statement kya hai?",o:["Microsoft ne ise Windows 11 version 24H2 se remove kiya","Ye har Windows version mein default available hai","Ye antivirus hai","Ye web browser hai"],a:0},
+
+
+/* MS PAINT - ADVANCED 13 QUESTIONS */
+
+{q:"MS Paint mein transparent selection ka kya purpose hai?",o:["Selection ke background ko transparent treat karna","Image ko password dena","Image ko print karna","File ko compress karna"],a:0},
+
+{q:"Paint mein Color Picker tool ka kya kaam hai?",o:["Existing image se color select karna","Image delete karna","Text bold karna","Canvas resize karna"],a:0},
+
+{q:"Paint mein Ctrl + W ka use kya hai?",o:["Resize and Skew dialog kholna","File save karna","Image print karna","Text copy karna"],a:0},
+
+{q:"Paint mein Ctrl + G ka standard use kya hai?",o:["Gridlines toggle karna","Image crop karna","File close karna","Color change karna"],a:0},
+
+{q:"Paint mein aspect ratio lock rakhkar resize karne ka benefit kya hai?",o:["Image ke proportions maintain rehte hain","Image automatically rotate hoti hai","Background delete hota hai","Image black and white hoti hai"],a:0},
+
+{q:"Paint mein skew operation kya karta hai?",o:["Image ya selection ko slant karta hai","Image ko print karta hai","Image ko save karta hai","Color fill karta hai"],a:0},
+
+{q:"Paint mein Ctrl + Page Down ka use kya hai?",o:["Zoom in","Zoom out","Delete","Save"],a:0},
+
+{q:"Paint mein Ctrl + Page Up ka use kya hai?",o:["Zoom out","Zoom in","Copy","Paste"],a:0},
+
+{q:"PNG image format ka ek important feature kya hai?",o:["Lossless compression aur transparency support","Sirf audio store karta hai","Sirf video store karta hai","Formatting support nahi karta"],a:0},
+
+{q:"JPEG format kis type ki image ke liye aam taur par suitable hai?",o:["Photographs","Editable text documents","Audio recordings","Program files"],a:0},
+
+{q:"Paint mein Ctrl + E ka use kya hai?",o:["Image Properties kholna","Eraser select karna","Image print karna","File rename karna"],a:0},
+
+{q:"Paint mein canvas area aur image content mein kya difference hai?",o:["Canvas working area hai, image content us par bana artwork hai","Dono operating systems hain","Canvas ek printer hai","Image content sirf text hota hai"],a:0},
+
+{q:"Paint mein Undo operation ka shortcut kya hai?",o:["Ctrl + Z","Ctrl + Y","Ctrl + P","Ctrl + H"],a:0}
+
+];
+
+// =================================
+// VARIABLES
+// =================================
+
+let current=0;
+let answers={};
+let seconds=1200;
+let timer=null;
+let submitted=false;
+
+
+// =================================
+// START TEST WITH PASSWORD
+// =================================
+
+function startTest(){
+
+let password=document.getElementById("examPassword").value;
+
+if(password!==EXAM_PASSWORD){
+
+alert("Incorrect Password! Please try again.");
+
+document.getElementById("examPassword").value="";
+document.getElementById("examPassword").focus();
+
+return;
+}
+
+let name=document.getElementById("student").value.trim();
+let roll=document.getElementById("roll").value.trim();
+let batch=document.getElementById("batch").value;
+
+if(!name || !roll || !batch){
+
+alert("Please fill all student details!");
+
+return;
+}
+
+document.getElementById("examPassword").value="";
+
+document.getElementById("welcome").style.display="none";
+document.getElementById("test").style.display="block";
+
+showQuestion();
+
+timer=setInterval(()=>{
+
+seconds--;
+
+let m=Math.floor(seconds/60);
+let s=seconds%60;
+
+document.getElementById("time").textContent=
+String(m).padStart(2,"0")+":"+
+String(s).padStart(2,"0");
+
+if(seconds<=0){
+submitTest();
+}
+
+},1000);
+
+}
+
+
+// =================================
+// SHOW QUESTION
+// =================================
+
+function showQuestion(){
+
+let q=questions[current];
+
+document.getElementById("qnumber").textContent=
+"Question "+(current+1)+" / "+questions.length;
+
+document.getElementById("question").textContent=q.q;
+
+let options=document.getElementById("options");
+
+options.innerHTML="";
+
+q.o.forEach((option,i)=>{
+
+let label=document.createElement("label");
+
+label.className="option";
+
+let radio=document.createElement("input");
+
+radio.type="radio";
+radio.name="answer";
+radio.value=i;
+
+radio.checked=answers[current]===i;
+
+radio.onchange=()=>{
+answers[current]=i;
+updateStatus();
+};
+
+label.appendChild(radio);
+label.appendChild(document.createTextNode(option));
+
+options.appendChild(label);
+
+});
+
+document.getElementById("bar").style.width=
+((current+1)/questions.length*100)+"%";
+
+updateStatus();
+
+}
+
+
+// =================================
+// STATUS
+// =================================
+
+function updateStatus(){
+
+document.getElementById("attempted").textContent=
+"Attempted: "+Object.keys(answers).length+
+" / "+questions.length;
+
+}
+
+
+// =================================
+// NEXT / PREVIOUS
+// =================================
+
+function next(){
+
+if(current<questions.length-1){
+current++;
+showQuestion();
+}
+
+}
+
+function previous(){
+
+if(current>0){
+current--;
+showQuestion();
+}
+
+}
+
+
+// =================================
+// SUBMIT TEST
+// =================================
+
+function submitTest(){
+
+if(submitted)return;
+
+let confirmSubmit=true;
+
+if(seconds>0){
+confirmSubmit=confirm("Are you sure you want to submit the test?");
+}
+
+if(!confirmSubmit)return;
+
+submitted=true;
+
+clearInterval(timer);
+
+let score=0;
+let wrong=0;
+let unanswered=0;
+
+questions.forEach((q,i)=>{
+
+if(answers[i]===q.a){
+score++;
+}
+else if(answers[i]===undefined){
+unanswered++;
+}
+else{
+wrong++;
+}
+
+});
+
+let percentage=(score/questions.length)*100;
+
+document.getElementById("test").style.display="none";
+document.getElementById("result").style.display="block";
+
+document.getElementById("resultName").textContent=
+"Student Name: "+document.getElementById("student").value;
+
+document.getElementById("resultRoll").textContent=
+"Roll Number: "+document.getElementById("roll").value;
+
+document.getElementById("resultBatch").textContent=
+"Batch Time: "+document.getElementById("batch").value;
+
+document.getElementById("marks").textContent=
+score+" / "+questions.length;
+
+document.getElementById("percentage").textContent=
+"Percentage: "+percentage.toFixed(2)+"%";
+
+document.getElementById("status").textContent=
+percentage>=55?"PASS":"FAIL";
+
+document.getElementById("status").style.color=
+percentage>=55?"#4ade80":"#ff6b6b";
+
+document.getElementById("correct").textContent=
+"Correct Answers: "+score;
+
+document.getElementById("wrong").textContent=
+"Wrong Answers: "+wrong;
+
+document.getElementById("unattempted").textContent=
+"Not Attempted: "+unanswered;
+
+}
+
+
+// =================================
+// SEND RESULT TO WHATSAPP
+// =================================
+
+function sendWhatsApp(){
+
+const name=document.getElementById("student").value;
+const roll=document.getElementById("roll").value;
+const batch=document.getElementById("batch").value;
+
+const score=document.getElementById("marks").textContent;
+const percentage=document.getElementById("percentage").textContent;
+const status=document.getElementById("status").textContent;
+
+const message=
+
+"INDIAN CTI - NOTEPAD / WORDPAD / MS PAINT TEST RESULT\n\n"+
+
+"Student Name: "+name+"\n"+
+
+"Roll Number: "+roll+"\n"+
+
+"Batch Time: "+batch+"\n"+
+
+"Total Questions: "+questions.length+"\n"+
+
+"Total Marks: "+questions.length+"\n"+
+
+"Obtained Marks: "+score+"\n"+
+
+percentage+"\n"+
+
+"Result: "+status+"\n\n"+
+
+"Thank You - INDIAN CTI";
+
+const url="https://wa.me/"+
+instituteWhatsApp+
+"?text="+encodeURIComponent(message);
+
+window.open(url,"_blank");
+
+}
+
+</script>
+
+</body>
+</html>
